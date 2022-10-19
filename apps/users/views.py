@@ -6,18 +6,19 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
-from apps.partner.permissions import AnonPermissionOnly
-from .serializers import MyTokenObtainPairSerializer, UserRegisterSerializer, UserSerializer, UserUpdateSerializer
-from .models import CustomUser
+from .permissions import AnonPermissionOnly
+from .serializers import MyTokenObtainPairSerializer, UserRegisterSerializer, UserSerializer, UserUpdateSerializer, \
+    PartnerSerializer, PartnerRegisterSerializer, PartnerUpdateSerializer
+from .models import User, Partner
 
 
-class UserLoginView(TokenObtainPairView):
+class LoginView(TokenObtainPairView):
     permission_classes = (AnonPermissionOnly,)
     serializer_class = MyTokenObtainPairSerializer
 
 
 class UserRegisterView(CreateAPIView):
-    queryset = CustomUser.objects.all()
+    queryset = User.objects.all()
     permission_classes = (AnonPermissionOnly,)
     serializer_class = UserRegisterSerializer
 
@@ -27,7 +28,7 @@ class UserListAPIView(APIView):
     # authentication_classes = []
 
     def get(self, request, format=None):
-        snippets = CustomUser.objects.all()
+        snippets = User.objects.all()
         serializer = UserSerializer(snippets, many=True)
         return Response(serializer.data)
 
@@ -39,8 +40,8 @@ class UserDetailAPIView(APIView):
 
     def get_object(self, id):
         try:
-            return CustomUser.objects.get(id=id)
-        except CustomUser.DoesNotExist:
+            return User.objects.get(id=id)
+        except User.DoesNotExist:
             raise Http404
 
     def get(self, request, id, format=None):
@@ -51,6 +52,57 @@ class UserDetailAPIView(APIView):
     def put(self, request, id, format=None):
         snippet = self.get_object(id)
         serializer = UserUpdateSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id, format=None):
+        snippet = self.get_object(id)
+        snippet.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PartnerLoginView(TokenObtainPairView):
+    permission_classes = (AnonPermissionOnly,)
+    serializer_class = MyTokenObtainPairSerializer
+
+
+class PartnerRegisterView(CreateAPIView):
+    queryset = Partner.objects.all()
+    permission_classes = (AnonPermissionOnly,)
+    serializer_class = PartnerRegisterSerializer
+
+
+class PartnerListAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    # authentication_classes = []
+
+    def get(self, request, format=None):
+        snippets = Partner.objects.all()
+        serializer = PartnerSerializer(snippets, many=True)
+        return Response(serializer.data)
+
+
+class PartnerDetailAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    # authentication_classes = [SessionAuthentication]
+    parser_classes = [JSONParser]
+
+    def get_object(self, id):
+        try:
+            return Partner.objects.get(id=id)
+        except Partner.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id, format=None):
+        snippet = self.get_object(id)
+        serializer = PartnerSerializer(snippet)
+        return Response(serializer.data)
+
+    def put(self, request, id, format=None):
+        snippet = self.get_object(id)
+        serializer = PartnerUpdateSerializer(snippet, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

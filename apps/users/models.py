@@ -40,7 +40,7 @@ class Partner(MyUser):
         return self.brand_name
 
 
-class CustomUser(MyUser):
+class User(MyUser):
     following = models.ManyToManyField(Partner, related_name='following', null=True, blank=True)
     name = models.CharField(max_length=255, null=False, blank=False)
     second_name = models.CharField(max_length=255, null=False, blank=False)
