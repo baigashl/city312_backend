@@ -13,10 +13,7 @@ class Discount(models.Model):
     discount_type_id = models.ForeignKey(DiscountType, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=255, null=False, blank=False)
     contacts = models.CharField(max_length=500, null=False, blank=False)
-    phone_number = models.CharField(max_length=500, null=False, blank=False)
-    description = models.TextField(null=False, blank=False)
-    inn = models.CharField(max_length=255, null=False, blank=False)
-    isVip = models.CharField(max_length=255, null=False, blank=False)
-    transaction_quantity = models.CharField(max_length=255, null=False, blank=False)
-    isPartner = models.CharField(max_length=255, null=False, blank=False)
+    social_link = models.TextField(null=False, blank=False)
+    operating_mode = models.CharField(max_length=255, null=False, blank=False)
+
 
