@@ -1,4 +1,4 @@
-from .models import ActivityType
+from .models import ActivityType, Category
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
@@ -17,7 +17,7 @@ class ActivityTypeSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = ActivityType
+        model = Category
         fields = ['id', 'activity_type', 'name']
 
     def get_url(self, obj):
