@@ -17,7 +17,7 @@ class CustomPagination(pagination.PageNumberPagination):
     page_query_param = 'p'
 
 
-class DiscountListAPIView(APIView, CustomPagination):
+class DiscountListAPIView(APIView):
     permission_classes = [permissions.AllowAny]
     # authentication_classes = []
     parser_classes = [JSONParser]
@@ -25,16 +25,12 @@ class DiscountListAPIView(APIView, CustomPagination):
     def get(self, request):
         snippets = Discount.objects.all()
         print(snippets.count())
-        # serializer = DiscountSerializer(snippets, many=True)
-        page_number = self.request.query_params.get('page_number ', 1)
-        page_size = self.request.query_params.get('page_size ', 10)
-
-        paginator = Paginator(snippets, page_size)
-        serializer = DiscountSerializer(paginator.page(page_number), many=True, context={'request': request})
+        serializer = DiscountSerializer(snippets, many=True)
+        page_num = int(self.request.query_params.get('page'))
         return Response({
             'count': snippets.count(),
             'success': True,
-            'results': serializer.data,
+            'results': serializer.data[page_num*10-10:page_num*10],
         }, status=status.HTTP_200_OK)
 
 
