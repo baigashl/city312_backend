@@ -10,6 +10,7 @@ from .views import (
     PartnerRegisterView,
     PartnerListAPIView,
     PartnerDetailAPIView,
+    CheckEmailAPIView,
 )
 
 urlpatterns = [
@@ -18,6 +19,7 @@ urlpatterns = [
     path('register/', UserRegisterView.as_view(), name='register-user'),
     path('partner/register/', PartnerRegisterView.as_view(), name='register-partner'),
 
+    path('check-email', CheckEmailAPIView.as_view(), name='check-email'),
     path('', UserListAPIView.as_view(), name='user-list'),
     path('partner/', PartnerListAPIView.as_view(), name='partner-list'),
     path('user/<int:id>/', UserDetailAPIView.as_view(), name='detail'),

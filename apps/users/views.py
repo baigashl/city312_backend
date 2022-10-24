@@ -12,6 +12,16 @@ from .serializers import MyTokenObtainPairSerializer, UserRegisterSerializer, Us
 from .models import User, Partner
 
 
+class CheckEmailAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    # authentication_classes = []
+
+    def post(self, request, format=None):
+        if User.objects.filter(email=request.data['email'].lower()).exists():
+            return Response('email already exists', status=status.HTTP_400_BAD_REQUEST)
+        return Response('OK', status=status.HTTP_200_OK)
+
+
 class LoginView(TokenObtainPairView):
     permission_classes = (AnonPermissionOnly,)
     serializer_class = MyTokenObtainPairSerializer
