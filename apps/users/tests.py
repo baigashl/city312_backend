@@ -10,8 +10,8 @@ client = Client()
 class UsersManagersTests(TestCase):
 
     def test_create_user(self):
-        User = CustomUser
-        user = CustomUser.objects.create(
+        User = User
+        user = User.objects.create(
             email='normal@users.com',
             password='foo',
             brand_name='asd',
