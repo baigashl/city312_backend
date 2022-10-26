@@ -1,3 +1,60 @@
+from django.http import Http404
 from django.shortcuts import render
+from rest_framework import permissions, status
+from rest_framework.parsers import JSONParser
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-# Create your views here.
+from apps.cart.models import Cart
+from .serializers import CartSerializer
+
+
+class CartListAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        activity_type = Cart.objects.all()
+        serializers = CartSerializer(activity_type, many=True)
+        return Response(serializers.data)
+
+
+class CartCreateAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializers = CartSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CartDetailAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    parser_classes = [JSONParser]
+
+    def get_object(self, id):
+        try:
+            return Cart.objects.get(id=id)
+        except Cart.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id, format=None):
+        snippet = self.get_object(id)
+        serializer = CartSerializer(snippet)
+        data = serializer.data
+        return Response(data)
+
+    def put(self, request, id, format=None):
+        snippet = self.get_object(id)
+        serializer = CartSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id, format=None):
+        snippet = self.get_object(id)
+        snippet.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

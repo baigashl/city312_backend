@@ -4,6 +4,7 @@ from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import User, Partner
 from rest_framework.reverse import reverse
+from apps.cart.models import Cart
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -66,6 +67,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.save()
+        cart = Cart.objects.create(
+            user=user
+        )
+        cart.save()
         return user
 
 

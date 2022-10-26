@@ -10,9 +10,9 @@ from .views import (
 
 
 urlpatterns = [
-    path('list/', ActivityTypeListAPIView.as_view(), name='activity_type_list'),
+    path('', ActivityTypeListAPIView.as_view(), name='activity_type_list'),
     path('create/', ActivityTypeCreateAPIView.as_view(), name='activity_type_create'),
-    path('detail/<int:id>', ActivityTypeDetailAPIView.as_view(), name='activity_type_detail'),
+    path('<int:id>/', ActivityTypeDetailAPIView.as_view(), name='activity_type_detail'),
 
 
     path('cat_list/', CategoryListAPIView.as_view(), name='category_list'),

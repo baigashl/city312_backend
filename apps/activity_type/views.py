@@ -1,7 +1,6 @@
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import ActivityType, Category
 from .serialisers import ActivityTypeSerializer, CategorySerializer
 from .models import ActivityType, Category
 from django.http import Http404
