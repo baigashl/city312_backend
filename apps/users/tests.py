@@ -10,7 +10,6 @@ client = Client()
 class UsersManagersTests(TestCase):
 
     def test_create_user(self):
-        User = User
         user = User.objects.create(
             email='normal@users.com',
             password='foo',
