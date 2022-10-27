@@ -7,6 +7,30 @@ from rest_framework.views import APIView
 
 from apps.cart.models import Cart
 from .serializers import CartSerializer
+from apps.discount.serializers import DiscountSerializer
+from apps.discount.models import Discount
+
+
+class GetUserCartAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, user_id):
+        snippet = Cart.objects.get(user_id=user_id)
+        discounts = snippet.discount.all()
+        print('asdasdasd', discounts)
+        serializer = CartSerializer(snippet)
+        serializer2 = DiscountSerializer(discounts, many=True)
+        data = serializer.data
+        data['discount'] = serializer2.data
+        return Response(data, status=status.HTTP_200_OK)
+
+    def patch(self, request, user_id):
+        snippet = Cart.objects.get(user_id=user_id)
+        serializer = CartSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CartListAPIView(APIView):
@@ -16,7 +40,6 @@ class CartListAPIView(APIView):
         activity_type = Cart.objects.all()
         serializers = CartSerializer(activity_type, many=True)
         return Response(serializers.data)
-
 
 class CartCreateAPIView(APIView):
     permission_classes = [permissions.AllowAny]
