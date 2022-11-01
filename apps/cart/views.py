@@ -41,6 +41,7 @@ class CartListAPIView(APIView):
         serializers = CartSerializer(activity_type, many=True)
         return Response(serializers.data)
 
+
 class CartCreateAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
@@ -56,28 +57,28 @@ class CartDetailAPIView(APIView):
     permission_classes = [permissions.AllowAny]
     parser_classes = [JSONParser]
 
-    def get_object(self, id):
+    def get_object(self, user_id):
         try:
-            return Cart.objects.get(id=id)
+            return Cart.objects.get(user_id=user_id)
         except Cart.DoesNotExist:
             raise Http404
 
-    def get(self, request, id, format=None):
-        snippet = self.get_object(id)
+    def get(self, request, user_id, format=None):
+        snippet = self.get_object(user_id)
         serializer = CartSerializer(snippet)
         data = serializer.data
         return Response(data)
 
-    def put(self, request, id, format=None):
-        snippet = self.get_object(id)
+    def put(self, request, user_id, format=None):
+        snippet = self.get_object(user_id)
         serializer = CartSerializer(snippet, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, id, format=None):
-        snippet = self.get_object(id)
+    def delete(self, request, user_id, format=None):
+        snippet = self.get_object(user_id)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

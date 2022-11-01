@@ -11,6 +11,10 @@ from .views import (
     PartnerListAPIView,
     PartnerDetailAPIView,
     CheckEmailAPIView,
+    FavoriteListAPIView,
+    FavoriteCreateAPIView,
+    GetUserFavoriteAPIView,
+    FavoriteDetailAPIView,
 )
 
 urlpatterns = [
@@ -24,4 +28,9 @@ urlpatterns = [
     path('partner/', PartnerListAPIView.as_view(), name='partner-list'),
     path('user/<int:id>/', UserDetailAPIView.as_view(), name='detail'),
     path('partner/<int:id>/', PartnerDetailAPIView.as_view(), name='detail'),
+
+    path('favorite/<int:user_id>/', GetUserFavoriteAPIView.as_view(), name='user-favorite'),
+    path('favorite/', FavoriteListAPIView.as_view(), name='favorite-list'),
+    path('favorite/create/', FavoriteCreateAPIView.as_view(), name='favorite-create'),
+    path('favorite/detail/<int:user_id>/', FavoriteDetailAPIView.as_view(), name='favorite-detail'),
 ]
