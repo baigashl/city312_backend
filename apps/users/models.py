@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from apps.activity_type.models import ActivityType
 from apps.users.managers import CustomUserManager
-from apps.discount.models import Discount
 
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
@@ -54,9 +53,4 @@ class User(MyUser):
         return f'{self.name}, {self.second_name}'
 
 
-class Favorite(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    discount = models.ManyToManyField(Discount, null=True, blank=True)
 
-    def __str__(self):
-        return f'{self.user}'

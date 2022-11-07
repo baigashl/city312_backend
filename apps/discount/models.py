@@ -1,6 +1,7 @@
 from django.db import models
 from apps.activity_type.models import Category
-from apps.users.models import Partner
+from apps.users.models import Partner, User
+
 
 
 class DiscountType(models.Model):
@@ -17,3 +18,9 @@ class Discount(models.Model):
     operating_mode = models.CharField(max_length=255, null=False, blank=False)
 
 
+class Favorite(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    discount = models.ManyToManyField(Discount, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.user}'

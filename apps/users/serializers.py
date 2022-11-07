@@ -5,7 +5,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import User, Partner
 from rest_framework.reverse import reverse
 from apps.cart.models import Cart
-from .models import Favorite
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -197,15 +196,7 @@ class PartnerUpdateSerializer(serializers.ModelSerializer):
         return reverse("detail", kwargs={'id': obj.id}, request=request)
 
 
-class FavoriteSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = Favorite
-        fields = '__all__'
-
-    def get_url(self, obj):
-        request = self.context.get('request')
-        return reverse("detail", kwargs={'id': obj.id}, request=request)
 
 
 
