@@ -3,9 +3,12 @@ from apps.activity_type.models import Category
 from apps.users.models import Partner, User
 
 
-
 class DiscountType(models.Model):
     name = models.CharField(max_length=255)
+
+
+def upload_image(instance, filename):
+    return 'images/{filename}'.format(filename=filename)
 
 
 class Discount(models.Model):
@@ -16,6 +19,7 @@ class Discount(models.Model):
     contacts = models.CharField(max_length=500, null=False, blank=False)
     social_link = models.TextField(null=False, blank=False)
     operating_mode = models.CharField(max_length=255, null=False, blank=False)
+    image = models.ImageField(default='default.png', null=True, blank=True, upload_to=upload_image)
 
 
 class Favorite(models.Model):

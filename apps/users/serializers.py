@@ -5,6 +5,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import User, Partner
 from rest_framework.reverse import reverse
 from apps.cart.models import Cart
+from ..discount.models import Favorite
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -133,10 +134,12 @@ class PartnerRegisterSerializer(serializers.ModelSerializer):
                   'description',
                   'inn',
                   'transaction_quantity',
-                  # 'isPartner',
-                  # 'isVip',
+                  'isPartner',
+                  'isVip',
                   'password',
-                  'password2']
+                  'password2',
+                  'logo'
+        ]
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -158,7 +161,7 @@ class PartnerRegisterSerializer(serializers.ModelSerializer):
             isPartner=True,
             is_admin=False,
             # isVip=validated_data['isVip'],
-            password=validated_data['password']
+            logo=validated_data['logo']
         )
         user.set_password(validated_data['password'])
         user.save()

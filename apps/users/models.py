@@ -25,8 +25,10 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f'{self.email}'
 
+
 def upload_logo(instance, filename):
     return 'logo/{filename}'.format(filename=filename)
+
 
 class Partner(MyUser):
     activity_type = models.ForeignKey(ActivityType, on_delete=models.SET_NULL, null=True, blank=True)
@@ -37,7 +39,7 @@ class Partner(MyUser):
     inn = models.CharField(max_length=255, null=False, blank=False)
     isVip = models.BooleanField(default=False)
     transaction_quantity = models.IntegerField(default=0, null=True, blank=True)
-    logo = models.ImageField(null=False, blank=False, upload_to='media/logo')
+    logo = models.ImageField(default='default.png', null=True, blank=True, upload_to=upload_logo)
 
     def __str__(self):
         return self.brand_name

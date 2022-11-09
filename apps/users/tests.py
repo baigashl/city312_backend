@@ -5,6 +5,9 @@ from django.urls import reverse
 import json
 from rest_framework import status
 from apps.activity_type.models import ActivityType
+import tempfile
+
+from PIL import Image as ImageFile, Image
 
 client = Client()
 
@@ -67,7 +70,17 @@ class UsersManagersTests(TestCase):
 class RegisterPartnerTest(TestCase):
     """ Test module for updating an existing puppy record """
 
+    def generate_img(self):
+        image = Image.new('RGB', (100, 100))
+        tmp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+        image.save(tmp_file)
+        return tmp_file.seek(0)
+
     def setUp(self):
+        image = Image.new('RGB', (100, 100))
+        tmp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+        image.save(tmp_file)
+        tmp_file.seek(0)
         self.activity_type = ActivityType.objects.create(
             name='Casper')
         self.partner = Partner.objects.create(
@@ -91,7 +104,8 @@ class RegisterPartnerTest(TestCase):
             'phone_number': '123123123',
             'description': 'jhgfjhgfjhgf',
             'inn': '123123123123',
-            'isVip': '456456456876',
+            'logo': tmp_file,
+            'isVip': True,
             'isPartner': True,
             'is_admin': False
         }
@@ -102,17 +116,39 @@ class RegisterPartnerTest(TestCase):
             'color': 'White'
         }
 
-    def test_valid_update_puppy(self):
-        response = client.put(
-            reverse('get_delete_update_puppy', kwargs={'pk': self.partner.pk}),
+    def test_valid_register_partner(self):
+        response = client.post(
+            reverse('register-partner'),
             data=json.dumps(self.valid_partner),
             content_type='application/json'
         )
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_invalid_update_puppy(self):
+    def test_get_list_partner(self):
+        response = client.get(
+            reverse('partner-list'),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_valid_update_partner(self):
         response = client.put(
-            reverse('get_delete_update_puppy', kwargs={'pk': self.partner.pk}),
+            reverse('partner-detail', kwargs={'id': self.partner.pk}),
+            data=json.dumps(self.valid_partner),
+            content_type='multipart/form-data'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_invalid_update_partner(self):
+        response = client.put(
+            reverse('partner-detail', kwargs={'id': self.partner.pk}),
             data=json.dumps(self.invalid_partner),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_valid_delete_partner(self):
+        response = client.delete(
+            reverse('partner-detail', kwargs={'id': self.partner.pk}),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
