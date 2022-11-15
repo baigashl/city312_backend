@@ -134,8 +134,8 @@ class PartnerRegisterSerializer(serializers.ModelSerializer):
                   'description',
                   'inn',
                   'transaction_quantity',
-                  'isPartner',
-                  'isVip',
+                  # 'isPartner',
+                  # 'isVip',
                   'password',
                   'password2',
                   'logo'
