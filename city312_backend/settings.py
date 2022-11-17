@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.cart',
     'apps.users',
     'apps.activity_type',
+    'apps.review',
 ]
 
 AUTH_USER_MODEL = 'users.MyUser'

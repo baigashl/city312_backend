@@ -2,6 +2,7 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import render
 from rest_framework import permissions, status
+from rest_framework.generics import CreateAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,6 +10,8 @@ from .models import Discount, DiscountType, Favorite
 from .serializers import DiscountSerializer, DiscountTypeSerializer, FavoriteSerializer
 
 from rest_framework import pagination
+
+from ..users.permissions import AnonPermissionOnly
 
 
 class CustomPagination(pagination.PageNumberPagination):
@@ -56,17 +59,22 @@ class DiscountListAPIView(APIView):
 #         }, status=status.HTTP_200_OK)
 
 
-class DiscountCreateAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
-    # authentication_classes = []
-    parser_classes = [JSONParser]
+class DiscountCreateAPIView(CreateAPIView):
+    queryset = Discount.objects.all()
+    permission_classes = (AnonPermissionOnly,)
+    serializer_class = DiscountSerializer
 
-    def post(self, request):
-        serializer = DiscountSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# class DiscountCreateAPIView(APIView):
+#     permission_classes = [permissions.AllowAny]
+#     # authentication_classes = []
+#     parser_classes = [JSONParser]
+#
+#     def post(self, request):
+#         serializer = DiscountSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 ############################################################################## FAVORITE
 
@@ -141,5 +149,16 @@ class FavoriteDetailAPIView(APIView):
         snippet = self.get_object(user_id)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class AddToFavoriteAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def patch(self, request):
+        serializers = FavoriteSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

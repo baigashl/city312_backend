@@ -16,4 +16,6 @@ urlpatterns = [
     path('favorite/', FavoriteListAPIView.as_view(), name='favorite-list'),
     path('favorite/create/', FavoriteCreateAPIView.as_view(), name='favorite-create'),
     path('favorite/detail/<int:user_id>/', FavoriteDetailAPIView.as_view(), name='favorite-detail'),
+
+    path('addtofavorite/<int:user_id>/', FavoriteDetailAPIView.as_view(), name='add-to-favorite'),
 ]

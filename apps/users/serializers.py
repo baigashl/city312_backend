@@ -200,11 +200,3 @@ class PartnerUpdateSerializer(serializers.ModelSerializer):
 
 
 
-
-
-
-
-
-
-
-

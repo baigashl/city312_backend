@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/discount/', include('apps.discount.urls')),
     path('api/activity_type/', include('apps.activity_type.urls')),
     path('api/cart/', include('apps.cart.urls')),
+    path('api/review/', include('apps.review.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
