@@ -83,7 +83,20 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = '__all__'
+        fields = [
+            'id',
+            'email',
+            'isPartner',
+            'isPartner',
+            'is_admin',
+            'name',
+            'second_name',
+            'date_of_birth',
+            'discount_card_number',
+            'phone_number',
+            'contract_offer',
+            'following'
+        ]
 
     def get_url(self, obj):
         request = self.context.get('request')
@@ -172,7 +185,21 @@ class PartnerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Partner
-        fields = '__all__'
+        fields = [
+            'id',
+            'email',
+            'isPartner',
+            'is_admin',
+            'brand_name',
+            'organization_form',
+            'phone_number',
+            'description',
+            'inn',
+            'isVip',
+            'transaction_quantity',
+            'logo',
+            'activity_type'
+        ]
 
     def get_url(self, obj):
         request = self.context.get('request')

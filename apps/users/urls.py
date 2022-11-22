@@ -22,6 +22,6 @@ urlpatterns = [
     path('check-email', CheckEmailAPIView.as_view(), name='check-email'),
     path('', UserListAPIView.as_view(), name='user-list'),
     path('partner/', PartnerListAPIView.as_view(), name='partner-list'),
-    path('user/<int:id>/', UserDetailAPIView.as_view(), name='user-detail'),
+    path('<int:id>/', UserDetailAPIView.as_view(), name='user-detail'),
     path('partner/<int:id>/', PartnerDetailAPIView.as_view(), name='partner-detail'),
 ]
