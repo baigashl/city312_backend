@@ -27,7 +27,10 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 
 
 def upload_logo(instance, filename):
-    return 'logo/{filename}'.format(filename=filename)
+    return f'logo/{filename}'.format(filename=filename)
+
+def upload_banner(instance, filename):
+    return f'logo/{filename}'.format(filename=filename)
 
 
 class Partner(MyUser):
@@ -40,6 +43,7 @@ class Partner(MyUser):
     isVip = models.BooleanField(default=False)
     transaction_quantity = models.IntegerField(default=0, null=True, blank=True)
     logo = models.ImageField(default='default.png', upload_to=upload_logo)
+    banner = models.ImageField(default='default.png', upload_to=upload_banner)
 
     def __str__(self):
         return self.brand_name

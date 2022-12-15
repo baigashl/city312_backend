@@ -11,3 +11,8 @@ class ActivityType(models.Model):
 class Category(models.Model):
     activity_type = models.ForeignKey(ActivityType, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+
+
+class SubCategory(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)

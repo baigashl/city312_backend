@@ -46,7 +46,7 @@ class UserListAPIView(APIView):
         return Response(serializer.data)
 
 
-class UserDetailAPIView(APIView):
+class UserDetailUpdateDeleteAPIView(APIView):
     permission_classes = [permissions.AllowAny]
     # authentication_classes = [SessionAuthentication]
     parser_classes = [JSONParser]
@@ -76,6 +76,27 @@ class UserDetailAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+#########################################Following
+class UserAddFollowingAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    # authentication_classes = []
+
+    def get_object(self, id):
+        try:
+            return User.objects.get(id=id)
+        except User.DoesNotExist:
+            raise Http404
+
+    def patch(self, request, id, format=None):
+        snippet = self.get_object(id)
+        print('follow', snippet.following)
+        serializer = UserUpdateSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            # snippet.following.
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 ############################################################# PARTNERS
 
 
@@ -100,7 +121,7 @@ class PartnerListAPIView(APIView):
         return Response(serializer.data)
 
 
-class PartnerDetailAPIView(APIView):
+class PartnerDetailUpdateDeleteAPIView(APIView):
     permission_classes = [permissions.AllowAny]
     # authentication_classes = [SessionAuthentication]
     parser_classes = [JSONParser]

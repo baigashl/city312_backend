@@ -151,7 +151,8 @@ class PartnerRegisterSerializer(serializers.ModelSerializer):
                   # 'isVip',
                   'password',
                   'password2',
-                  'logo'
+                  'logo',
+                  'banner'
         ]
 
     def validate(self, attrs):
@@ -198,6 +199,7 @@ class PartnerSerializer(serializers.ModelSerializer):
             'isVip',
             'transaction_quantity',
             'logo',
+            'banner',
             'activity_type'
         ]
 
@@ -210,15 +212,17 @@ class PartnerUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Partner
-        fields = [
-            'activity_type',
-            'brand_name',
-            'organization_form',
-            'phone_number',
-            'description',
-            'inn',
-            'isVip',
-            'transaction_quantity'
+        fields = ['activity_type',
+                  'brand_name',
+                  'organization_form',
+                  'phone_number',
+                  'description',
+                  'inn',
+                  'transaction_quantity',
+                  # 'isPartner',
+                  # 'isVip',
+                  'logo',
+                  'banner'
         ]
 
     def get_url(self, obj):
