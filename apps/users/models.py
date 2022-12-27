@@ -62,4 +62,14 @@ class User(MyUser):
         return f'{self.name}, {self.second_name}'
 
 
+class Admin(MyUser):
+    name = models.CharField(max_length=255, null=False, blank=False)
+    second_name = models.CharField(max_length=255, null=False, blank=False)
+    date_of_birth = models.CharField(max_length=255, null=False, blank=False)
+    phone_number = models.CharField(max_length=255, null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.name}, {self.second_name}'
+
+
 

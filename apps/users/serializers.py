@@ -2,7 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import User, Partner
+from .models import User, Partner, Admin
 from rest_framework.reverse import reverse
 from apps.cart.models import Cart
 from ..discount.models import Favorite
@@ -229,5 +229,16 @@ class PartnerUpdateSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         return reverse("detail", kwargs={'id': obj.id}, request=request)
 
+
+
+class AdminSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Admin
+        fields = '__all__'
+
+    def get_url(self, obj):
+        request = self.context.get('request')
+        return reverse("detail", kwargs={'id': obj.id}, request=request)
 
 

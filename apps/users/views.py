@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .permissions import AnonPermissionOnly
 from .serializers import MyTokenObtainPairSerializer, UserRegisterSerializer, UserSerializer, UserUpdateSerializer, \
-    PartnerSerializer, PartnerRegisterSerializer, PartnerUpdateSerializer
+    PartnerSerializer, PartnerRegisterSerializer, PartnerUpdateSerializer, AdminSerializer
 from .models import User, Partner
 from ..discount.serializers import DiscountSerializer
 
@@ -87,12 +87,12 @@ class UserAddFollowingAPIView(APIView):
         except User.DoesNotExist:
             raise Http404
 
-    def patch(self, request, id, format=None):
+    def patch(self, request, format=None):
         snippet = self.get_object(id)
         print('follow', snippet.following)
         serializer = UserUpdateSerializer(snippet, data=request.data)
         if serializer.is_valid():
-            # snippet.following.
+            snippet.following.add()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -151,7 +151,19 @@ class PartnerDetailUpdateDeleteAPIView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+###############################################################################Admin
 
+class AdminRegisterAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    # authentication_classes = []
+    parser_classes = [JSONParser]
+
+    def post(self, request):
+        serializer = AdminSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

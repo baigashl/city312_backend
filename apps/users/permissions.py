@@ -18,6 +18,8 @@ class IsPartnerPermission(permissions.BasePermission):
         return request.user.isPartner
 
 
+
+
 class AnonPermissionOnly(permissions.BasePermission):
     message = "You are already authenticated"
 
