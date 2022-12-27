@@ -61,7 +61,7 @@ class DiscountListAPIView(APIView):
 
 class DiscountCreateAPIView(CreateAPIView):
     queryset = Discount.objects.all()
-    permission_classes = (AnonPermissionOnly,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = DiscountSerializer
 
 # class DiscountCreateAPIView(APIView):
