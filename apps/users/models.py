@@ -50,13 +50,11 @@ class Partner(MyUser):
 
 
 class User(MyUser):
-    following = models.ManyToManyField(Partner, related_name='following', null=True, blank=True)
     name = models.CharField(max_length=255, null=False, blank=False)
     second_name = models.CharField(max_length=255, null=False, blank=False)
     date_of_birth = models.CharField(max_length=255, null=False, blank=False)
     phone_number = models.CharField(max_length=255, null=False, blank=False)
-    discount_card_number = models.CharField(max_length=1000, null=True, blank=True)
-    contract_offer = models.CharField(max_length=255, null=False, blank=False)
+    image = models.ImageField(default='user_default.png', upload_to='user_image')
 
     def __str__(self):
         return f'{self.name}, {self.second_name}'

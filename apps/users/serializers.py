@@ -41,8 +41,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                   'second_name',
                   'date_of_birth',
                   'phone_number',
-                  'discount_card_number',
-                  'contract_offer',
+                  'image',
                   'password',
                   'password2']
 
@@ -60,8 +59,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             second_name=validated_data['second_name'],
             date_of_birth=validated_data['date_of_birth'],
             phone_number=validated_data['phone_number'],
-            discount_card_number=validated_data['discount_card_number'],
-            contract_offer=validated_data['contract_offer'],
+            image=validated_data['image'],
             isPartner=False,
             is_admin=False,
             password=validated_data['password']
@@ -92,9 +90,8 @@ class UserSerializer(serializers.ModelSerializer):
             'name',
             'second_name',
             'date_of_birth',
-            'discount_card_number',
             'phone_number',
-            'contract_offer',
+            'image',
             'following'
         ]
 
@@ -113,8 +110,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'second_name',
             'date_of_birth',
             'phone_number',
-            'discount_card_number',
-            'contract_offer',
+            'image',
         ]
 
     def get_url(self, obj):
