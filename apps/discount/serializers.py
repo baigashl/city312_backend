@@ -1,3 +1,5 @@
+import django_filters
+
 from .models import Discount, DiscountType, Favorite
 from rest_framework import serializers
 from rest_framework.reverse import reverse
@@ -34,4 +36,6 @@ class FavoriteSerializer(serializers.ModelSerializer):
     def get_url(self, obj):
         request = self.context.get('request')
         return reverse("detail", kwargs={'id': obj.id}, request=request)
+
+
 

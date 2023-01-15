@@ -1,7 +1,8 @@
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import render
-from rest_framework import permissions, status
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import permissions, status, filters
 from rest_framework.generics import CreateAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
@@ -25,6 +26,7 @@ class DiscountListAPIView(APIView):
     permission_classes = [permissions.AllowAny]
     # authentication_classes = []
     parser_classes = [JSONParser]
+
 
     def get(self, request):
         snippets = Discount.objects.all()

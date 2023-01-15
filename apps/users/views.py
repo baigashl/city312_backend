@@ -10,12 +10,18 @@ from .permissions import AnonPermissionOnly
 from .serializers import MyTokenObtainPairSerializer, UserRegisterSerializer, UserSerializer, UserUpdateSerializer, \
     PartnerSerializer, PartnerRegisterSerializer, PartnerUpdateSerializer, AdminSerializer
 from .models import User, Partner
+from rest_framework.schemas.openapi import AutoSchema
 from ..discount.serializers import DiscountSerializer
 
 
 class CheckEmailAPIView(APIView):
     permission_classes = [permissions.AllowAny]
     # authentication_classes = []
+    schema = AutoSchema(
+        tags=['AUTH'],
+        component_name='Assign To Me',
+        operation_id_base='CandidateAssignToMeList',
+    )
 
     def post(self, request, format=None):
         if User.objects.filter(email=request.data['email'].lower()).exists():
@@ -26,6 +32,11 @@ class CheckEmailAPIView(APIView):
 class LoginView(TokenObtainPairView):
     permission_classes = (AnonPermissionOnly,)
     serializer_class = MyTokenObtainPairSerializer
+    schema = AutoSchema(
+        tags=['AUTH'],
+        component_name='Assign To Me',
+        operation_id_base='CandidateAssignToMeList',
+    )
 
 ########################################################### USERS
 

@@ -21,6 +21,9 @@ class Discount(models.Model):
     operating_mode = models.CharField(max_length=255, null=False, blank=False)
     image = models.ImageField(default='default.png', null=True, blank=True, upload_to=upload_image)
 
+    def __str__(self):
+        return f'{self.name}'
+
 
 class Favorite(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

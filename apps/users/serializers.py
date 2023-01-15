@@ -41,6 +41,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
                   'second_name',
                   'date_of_birth',
                   'phone_number',
+                  'discount_card_number',
                   'image',
                   'password',
                   'password2']
@@ -53,13 +54,18 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        if 'image' in list(validated_data.keys()):
+            image = validated_data['image'],
+        else:
+            image = None
         user = User.objects.create(
             email=validated_data['email'].lower(),
             name=validated_data['name'],
             second_name=validated_data['second_name'],
             date_of_birth=validated_data['date_of_birth'],
             phone_number=validated_data['phone_number'],
-            image=validated_data['image'],
+            discount_card_number=validated_data['discount_card_number'],
+            image = image,
             isPartner=False,
             is_admin=False,
             password=validated_data['password']
@@ -84,15 +90,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'email',
-            'isPartner',
-            'isPartner',
-            'is_admin',
             'name',
             'second_name',
             'date_of_birth',
             'phone_number',
             'image',
-            'following'
         ]
 
     def get_url(self, obj):
@@ -169,9 +171,8 @@ class PartnerRegisterSerializer(serializers.ModelSerializer):
             inn=validated_data['inn'],
             transaction_quantity=validated_data['transaction_quantity'],
             isPartner=True,
-            is_admin=False,
             # isVip=validated_data['isVip'],
-            logo=validated_data['logo']
+            logo=validated_data['logo'] if validated_data['logo'] else None
         )
         user.set_password(validated_data['password'])
         user.save()

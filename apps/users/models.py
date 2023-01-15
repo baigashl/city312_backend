@@ -54,6 +54,7 @@ class User(MyUser):
     second_name = models.CharField(max_length=255, null=False, blank=False)
     date_of_birth = models.CharField(max_length=255, null=False, blank=False)
     phone_number = models.CharField(max_length=255, null=False, blank=False)
+    discount_card_number = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField(default='user_default.png', upload_to='user_image')
 
     def __str__(self):
