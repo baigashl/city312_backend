@@ -1588,8 +1588,8 @@
               "maxLength": 255
             },
             "activity_type": {
-              "type": "integer",
-              "nullable": true
+              "type": "string",
+              "maxLength": 255
             },
             "brand_name": {
               "type": "string",
@@ -1599,11 +1599,12 @@
               "type": "string",
               "maxLength": 255
             },
-            "phone_number": {
-              "type": "string",
-              "maxLength": 255
-            },
             "logo": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
+            },
+            "banner": {
               "type": "string",
               "format": "binary",
               "nullable": true
@@ -1616,9 +1617,6 @@
               "type": "string",
               "maxLength": 255
             },
-            "transaction_quantity": {
-              "type": "integer"
-            },
             "password": {
               "type": "string",
               "maxLength": 255
@@ -1626,14 +1624,62 @@
             "password2": {
               "type": "string",
               "maxLength": 255
+            },
+            "phone1": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "phone2": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "phone3": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "phone4": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "whatsapp": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "youtube": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "telegram": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "facebook": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "schedule": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "start": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "end": {
+              "type": "string",
+              "maxLength": 255
             }
           },
           "required": [
-            "name",
             "email",
-            "second_name",
-            "date_of_birth",
+            "activity_type",
+            "brand_name",
+            "organization_form",
             "phone_number",
+            "logo",
+            "banner",
+            "description",
+            "inn",
             "password",
             "password2"
           ]

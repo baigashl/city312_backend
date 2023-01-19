@@ -8,8 +8,9 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .permissions import AnonPermissionOnly
 from .serializers import MyTokenObtainPairSerializer, UserRegisterSerializer, UserSerializer, UserUpdateSerializer, \
-    PartnerSerializer, PartnerRegisterSerializer, PartnerUpdateSerializer, AdminSerializer
-from .models import User, Partner
+    PartnerSerializer, PartnerRegisterSerializer, PartnerUpdateSerializer, AdminSerializer, \
+    PartnerPhoneNumberSerializer, PartnerSocialMediaSerializer, WorkingModeSerializer
+from .models import User, Partner, PartnerPhoneNumber, PartnerSocialMedia, WorkingMode
 from rest_framework.schemas.openapi import AutoSchema
 from ..discount.serializers import DiscountSerializer
 
@@ -116,10 +117,65 @@ class PartnerLoginView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
-class PartnerRegisterView(CreateAPIView):
-    queryset = Partner.objects.all()
-    permission_classes = (AnonPermissionOnly,)
-    serializer_class = PartnerRegisterSerializer
+class PartnerRegisterView(APIView):
+    permission_classes = [permissions.AllowAny]
+    # authentication_classes = []
+    parser_classes = [JSONParser]
+
+    def post(self, request):
+        serializer = PartnerRegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = Partner.objects.create(
+                email=request.data['email'],
+                activity_type=request.data['activity_type'],
+                brand_name=request.data['brand_name'],
+                organization_form=request.data['organization_form'],
+                description=request.data['description'],
+                inn=request.data['inn'],
+                isPartner=True,
+                # logo=request.data['logo'] if request.data['logo'] else None,
+                # banner=request.data['banner'] if request.data['banner'] else None
+            )
+            user.set_password(request.data['password'])
+            user.save()
+            phone = PartnerPhoneNumber.objects.create(
+                partner=user,
+                phone1=request.data['phone1'],
+                phone2=request.data['phone2'],
+                phone3=request.data['phone3'],
+                phone4=request.data['phone4']
+            )
+            phone.save()
+            social_media = PartnerSocialMedia.objects.create(
+                partner=user,
+                whatsapp=request.data['whatsapp'],
+                youtube=request.data['youtube'],
+                telegram=request.data['telegram'],
+                facebook=request.data['facebook']
+            )
+            social_media.save()
+            working_mode = WorkingMode.objects.create(
+                partner=user,
+                schedule=request.data['schedule'],
+                start=request.data['start'],
+                end=request.data['end']
+            )
+            working_mode.save()
+            data = {
+                "partner": serializer.data,
+                "phone1" : request.data['phone1'],
+                "phone2" : request.data['phone2'],
+                "phone3" : request.data['phone3'],
+                "phone4" : request.data['phone4'],
+                "whatsapp" : request.data['whatsapp'],
+                "youtube" : request.data['youtube'],
+                "telegram" : request.data['telegram'],
+                "facebook" : request.data['facebook'],
+                "start" : request.data['start'],
+                "end" : request.data['end']
+            }
+            return Response(data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PartnerListAPIView(APIView):
@@ -144,9 +200,22 @@ class PartnerDetailUpdateDeleteAPIView(APIView):
             raise Http404
 
     def get(self, request, id, format=None):
-        snippet = self.get_object(id)
-        serializer = PartnerSerializer(snippet)
-        return Response(serializer.data)
+        partner = self.get_object(id)
+        phone = PartnerPhoneNumber.objects.get(partner_id=id)
+        social_media = PartnerSocialMedia.objects.get(partner_id=id)
+        working_mode = WorkingMode.objects.get(partner_id=id)
+        serializer1 = PartnerSerializer(partner)
+        serializer2 = PartnerPhoneNumberSerializer(phone)
+        serializer3 = PartnerSocialMediaSerializer(social_media)
+        serializer4 = WorkingModeSerializer(working_mode)
+        data = {
+            "partner": serializer1.data,
+            "phone": serializer2.data,
+            "social_media": serializer3.data,
+            "working_mode": serializer4.data,
+        }
+
+        return Response(data)
 
     def put(self, request, id, format=None):
         snippet = self.get_object(id)
