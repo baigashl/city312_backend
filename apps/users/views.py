@@ -125,6 +125,16 @@ class PartnerRegisterView(APIView):
     def post(self, request):
         serializer = PartnerRegisterSerializer(data=request.data)
         if serializer.is_valid():
+            if 'logo' in list(request.data.keys()):
+                logo = request.data['logo'],
+            else:
+                logo = None
+
+            if 'banner' in list(request.data.keys()):
+                banner = request.data['banner'],
+            else:
+                banner = None
+
             user = Partner.objects.create(
                 email=request.data['email'],
                 activity_type=request.data['activity_type'],
@@ -133,8 +143,8 @@ class PartnerRegisterView(APIView):
                 description=request.data['description'],
                 inn=request.data['inn'],
                 isPartner=True,
-                # logo=request.data['logo'] if request.data['logo'] else None,
-                # banner=request.data['banner'] if request.data['banner'] else None
+                logo=logo,
+                banner=banner
             )
             user.set_password(request.data['password'])
             user.save()
