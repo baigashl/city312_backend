@@ -2,7 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import User, Partner, Admin, PartnerPhoneNumber, PartnerSocialMedia, WorkingMode
+from .models import User, Partner, Admin
 from rest_framework.reverse import reverse
 from apps.cart.models import Cart
 from ..discount.models import Favorite
@@ -150,7 +150,18 @@ class PartnerRegisterSerializer(serializers.ModelSerializer):
           'password',
           'password2',
           'logo',
-          'banner'
+          'banner',
+            'phone1',
+            'phone2',
+            'phone3',
+            'phone4',
+            'whatsapp',
+            'youtube',
+            'telegram',
+            'facebook',
+            'schedule',
+            'start',
+            'end'
         ]
 
     def validate(self, attrs):
@@ -159,23 +170,6 @@ class PartnerRegisterSerializer(serializers.ModelSerializer):
                 {"password": "Password fields didn`t match."}
             )
         return attrs
-
-    # def create(self, validated_data):
-    #     user = Partner.objects.create(
-    #         email=validated_data['email'],
-    #         activity_type=validated_data['activity_type'],
-    #         brand_name=validated_data['brand_name'],
-    #         organization_form=validated_data['organization_form'],
-    #         description=validated_data['description'],
-    #         inn=validated_data['inn'],
-    #         isPartner=True,
-    #         # isVip=validated_data['isVip'],
-    #         # logo=validated_data['logo'] if validated_data['logo'] else None,
-    #         # banner=validated_data['banner'] if validated_data['banner'] else None
-    #     )
-    #     user.set_password(validated_data['password'])
-    #     user.save()
-    #     return user
 
 
 class PartnerSerializer(serializers.ModelSerializer):
@@ -195,35 +189,23 @@ class PartnerSerializer(serializers.ModelSerializer):
             'transaction_quantity',
             'logo',
             'banner',
-            'activity_type'
+            'activity_type',
+            'phone1',
+            'phone2',
+            'phone3',
+            'phone4',
+            'whatsapp',
+            'youtube',
+            'telegram',
+            'facebook',
+            'schedule',
+            'start',
+            'end'
         ]
 
     def get_url(self, obj):
         request = self.context.get('request')
         return reverse("detail", kwargs={'id': obj.id}, request=request)
-
-
-class PartnerUpdateSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Partner
-        fields = ['activity_type',
-                  'brand_name',
-                  'organization_form',
-                  'phone_number',
-                  'description',
-                  'inn',
-                  'transaction_quantity',
-                  # 'isPartner',
-                  # 'isVip',
-                  'logo',
-                  'banner'
-        ]
-
-    def get_url(self, obj):
-        request = self.context.get('request')
-        return reverse("detail", kwargs={'id': obj.id}, request=request)
-
 
 
 class AdminSerializer(serializers.ModelSerializer):
@@ -235,37 +217,4 @@ class AdminSerializer(serializers.ModelSerializer):
     def get_url(self, obj):
         request = self.context.get('request')
         return reverse("detail", kwargs={'id': obj.id}, request=request)
-
-class PartnerPhoneNumberSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = PartnerPhoneNumber
-        fields = '__all__'
-
-    def get_url(self, obj):
-        request = self.context.get('request')
-        return reverse("detail", kwargs={'id': obj.id}, request=request)
-
-
-class PartnerSocialMediaSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = PartnerSocialMedia
-        fields = '__all__'
-
-    def get_url(self, obj):
-        request = self.context.get('request')
-        return reverse("detail", kwargs={'id': obj.id}, request=request)
-
-
-class WorkingModeSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = WorkingMode
-        fields = '__all__'
-
-    def get_url(self, obj):
-        request = self.context.get('request')
-        return reverse("detail", kwargs={'id': obj.id}, request=request)
-
 

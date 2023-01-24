@@ -30,7 +30,7 @@ def upload_logo(instance, filename):
     return f'logo/{filename}'.format(filename=filename)
 
 def upload_banner(instance, filename):
-    return f'logo/{filename}'.format(filename=filename)
+    return f'banner/{filename}'.format(filename=filename)
 
 
 class Partner(MyUser):
@@ -43,6 +43,17 @@ class Partner(MyUser):
     transaction_quantity = models.IntegerField(default=0, null=True, blank=True)
     logo = models.ImageField(default='default.png', upload_to=upload_logo)
     banner = models.ImageField(default='default.png', upload_to=upload_banner)
+    phone1 = models.CharField(max_length=255, null=False, blank=False)
+    phone2 = models.CharField(max_length=255, null=True, blank=True)
+    phone3 = models.CharField(max_length=255, null=True, blank=True)
+    phone4 = models.CharField(max_length=255, null=True, blank=True)
+    whatsapp = models.CharField(max_length=255, null=True, blank=True)
+    youtube = models.CharField(max_length=255, null=True, blank=True)
+    telegram = models.CharField(max_length=255, null=True, blank=True)
+    facebook = models.CharField(max_length=255, null=True, blank=True)
+    schedule = models.CharField(max_length=255, null=False, blank=False)
+    start = models.CharField(max_length=255, null=False, blank=False)
+    end = models.CharField(max_length=255, null=False, blank=False)
 
 
     def __str__(self):
@@ -61,36 +72,6 @@ class User(MyUser):
         return f'{self.name}, {self.second_name}'
 
 
-class PartnerPhoneNumber(models.Model):
-    partner = models.ForeignKey(Partner, on_delete=models.CASCADE)
-    phone1 = models.CharField(max_length=255, null=True, blank=True)
-    phone2 = models.CharField(max_length=255, null=True, blank=True)
-    phone3 = models.CharField(max_length=255, null=True, blank=True)
-    phone4 = models.CharField(max_length=255, null=True, blank=True)
-
-    def __str__(self):
-        return f'{self.partner}'
-
-
-class PartnerSocialMedia(models.Model):
-    partner = models.ForeignKey(Partner, on_delete=models.CASCADE)
-    whatsapp = models.CharField(max_length=255, null=True, blank=True)
-    youtube = models.CharField(max_length=255, null=True, blank=True)
-    telegram = models.CharField(max_length=255, null=True, blank=True)
-    facebook = models.CharField(max_length=255, null=True, blank=True)
-
-    def __str__(self):
-        return f'{self.partner}'
-
-
-class WorkingMode(models.Model):
-    partner = models.ForeignKey(Partner, on_delete=models.CASCADE)
-    schedule = models.CharField(max_length=255, null=True, blank=True)
-    start = models.CharField(max_length=255, null=True, blank=True)
-    end = models.CharField(max_length=255, null=True, blank=True)
-
-    def __str__(self):
-        return f'{self.partner}'
 
 class Admin(MyUser):
     name = models.CharField(max_length=255, null=False, blank=False)

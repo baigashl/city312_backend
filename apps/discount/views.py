@@ -61,22 +61,76 @@ class DiscountListAPIView(APIView):
 #         }, status=status.HTTP_200_OK)
 
 
-class DiscountCreateAPIView(CreateAPIView):
-    queryset = Discount.objects.all()
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = DiscountSerializer
+# class DiscountCreateAPIView(CreateAPIView):
+#     queryset = Discount.objects.all()
+#     permission_classes = (permissions.AllowAny,)
+#     serializer_class = DiscountSerializer
 
-# class DiscountCreateAPIView(APIView):
-#     permission_classes = [permissions.AllowAny]
-#     # authentication_classes = []
-#     parser_classes = [JSONParser]
-#
-#     def post(self, request):
-#         serializer = DiscountSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class DiscountCreateAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    # authentication_classes = []
+    # parser_classes = [JSONParser]
+
+    def post(self, request):
+        serializer = DiscountSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DiscountDetailAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    # parser_classes = [JSONParser]
+
+    def get_object(self, id):
+        try:
+            return Discount.objects.get(id=id)
+        except Discount.DoesNotExist:
+            raise Http404
+
+    def get(self, request, user_id, format=None):
+        snippet = self.get_object(user_id)
+        serializer = DiscountSerializer(snippet)
+        return Response(serializer.data)
+
+
+class DiscountUpdateAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    # parser_classes = [JSONParser]
+
+    def get_object(self, id):
+        try:
+            return Discount.objects.get(id=id)
+        except Discount.DoesNotExist:
+            raise Http404
+
+    def put(self, request, id, format=None):
+        snippet = self.get_object(id)
+        serializer = DiscountSerializer(snippet, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DiscountDeleteAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    parser_classes = [JSONParser]
+
+    def get_object(self, id):
+        try:
+            return Discount.objects.get(id=id)
+        except Discount.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, id, format=None):
+        snippet = self.get_object(id)
+        snippet.delete()
+        return Response(status.HTTP_204_NO_CONTENT)
+
+
+
 
 ############################################################################## FAVORITE
 

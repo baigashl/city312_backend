@@ -1,18 +1,37 @@
 from django.http import Http404
+import jwt
 from django.shortcuts import render
 from rest_framework import permissions, status
 from rest_framework.generics import CreateAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt import exceptions
 from rest_framework_simplejwt.views import TokenObtainPairView
+
 from .permissions import AnonPermissionOnly
 from .serializers import MyTokenObtainPairSerializer, UserRegisterSerializer, UserSerializer, UserUpdateSerializer, \
-    PartnerSerializer, PartnerRegisterSerializer, PartnerUpdateSerializer, AdminSerializer, \
-    PartnerPhoneNumberSerializer, PartnerSocialMediaSerializer, WorkingModeSerializer
-from .models import User, Partner, PartnerPhoneNumber, PartnerSocialMedia, WorkingMode
+    PartnerSerializer, PartnerRegisterSerializer, AdminSerializer
+from .models import User, Partner
 from rest_framework.schemas.openapi import AutoSchema
 from ..discount.serializers import DiscountSerializer
+
+
+
+def decode_auth_token(token):
+    try:
+        SECRET_KEY = 'django-insecure-xuit0+ra8+y(ek%las(39)tb+d&uz02ku9okd2fsrl)747@8vb'
+        user = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        msg = 'Signature has expired. Login again.'
+        raise exceptions.AuthenticationFailed(msg)
+    except jwt.DecodeError:
+        msg = 'Error decoding signature. Type valid token'
+        raise exceptions.AuthenticationFailed(msg)
+    except jwt.InvalidTokenError:
+        raise exceptions.AuthenticationFailed()
+    return user
+
 
 
 class CheckEmailAPIView(APIView):
@@ -63,27 +82,28 @@ class UserDetailUpdateDeleteAPIView(APIView):
     # authentication_classes = [SessionAuthentication]
     parser_classes = [JSONParser]
 
-    def get_object(self, id):
+    def get_object(self, token):
         try:
-            return User.objects.get(id=id)
+            user = decode_auth_token(token)
+            return User.objects.get(id=user['user_id'])
         except User.DoesNotExist:
             raise Http404
 
-    def get(self, request, id, format=None):
-        snippet = self.get_object(id)
+    def get(self, request, token, format=None):
+        snippet = self.get_object(token)
         serializer = UserSerializer(snippet)
         return Response(serializer.data)
 
-    def put(self, request, id, format=None):
-        snippet = self.get_object(id)
+    def put(self, request, token, format=None):
+        snippet = self.get_object(token)
         serializer = UserUpdateSerializer(snippet, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, id, format=None):
-        snippet = self.get_object(id)
+    def delete(self, request, token, format=None):
+        snippet = self.get_object(token)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -144,47 +164,22 @@ class PartnerRegisterView(APIView):
                 inn=request.data['inn'],
                 isPartner=True,
                 logo=logo,
-                banner=banner
-            )
-            user.set_password(request.data['password'])
-            user.save()
-            phone = PartnerPhoneNumber.objects.create(
-                partner=user,
+                banner=banner,
                 phone1=request.data['phone1'],
                 phone2=request.data['phone2'],
                 phone3=request.data['phone3'],
-                phone4=request.data['phone4']
-            )
-            phone.save()
-            social_media = PartnerSocialMedia.objects.create(
-                partner=user,
+                phone4=request.data['phone4'],
                 whatsapp=request.data['whatsapp'],
                 youtube=request.data['youtube'],
                 telegram=request.data['telegram'],
-                facebook=request.data['facebook']
-            )
-            social_media.save()
-            working_mode = WorkingMode.objects.create(
-                partner=user,
+                facebook=request.data['facebook'],
                 schedule=request.data['schedule'],
                 start=request.data['start'],
                 end=request.data['end']
             )
-            working_mode.save()
-            data = {
-                "partner": serializer.data,
-                "phone1" : request.data['phone1'],
-                "phone2" : request.data['phone2'],
-                "phone3" : request.data['phone3'],
-                "phone4" : request.data['phone4'],
-                "whatsapp" : request.data['whatsapp'],
-                "youtube" : request.data['youtube'],
-                "telegram" : request.data['telegram'],
-                "facebook" : request.data['facebook'],
-                "start" : request.data['start'],
-                "end" : request.data['end']
-            }
-            return Response(data, status=status.HTTP_201_CREATED)
+            user.set_password(request.data['password'])
+            user.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -203,40 +198,29 @@ class PartnerDetailUpdateDeleteAPIView(APIView):
     # authentication_classes = [SessionAuthentication]
     parser_classes = [JSONParser]
 
-    def get_object(self, id):
+    def get_object(self, token):
         try:
-            return Partner.objects.get(id=id)
+            user = decode_auth_token(token)
+            print(user['user_id'])
+            return Partner.objects.get(id=user['user_id'])
         except Partner.DoesNotExist:
             raise Http404
 
-    def get(self, request, id, format=None):
-        partner = self.get_object(id)
-        phone = PartnerPhoneNumber.objects.get(partner_id=id)
-        social_media = PartnerSocialMedia.objects.get(partner_id=id)
-        working_mode = WorkingMode.objects.get(partner_id=id)
+    def get(self, request, token, format=None):
+        partner = self.get_object(token)
         serializer1 = PartnerSerializer(partner)
-        serializer2 = PartnerPhoneNumberSerializer(phone)
-        serializer3 = PartnerSocialMediaSerializer(social_media)
-        serializer4 = WorkingModeSerializer(working_mode)
-        data = {
-            "partner": serializer1.data,
-            "phone": serializer2.data,
-            "social_media": serializer3.data,
-            "working_mode": serializer4.data,
-        }
+        return Response(serializer1.data, status=status.HTTP_200_OK)
 
-        return Response(data)
+    def put(self, request, token, format=None):
+        partner = self.get_object(token)
+        serializer1 = PartnerSerializer(partner, request.data)
+        if serializer1.is_valid():
+            serializer1.save()
+            return Response(serializer1.data, status=status.HTTP_200_OK)
+        return Response(serializer1.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, id, format=None):
-        snippet = self.get_object(id)
-        serializer = PartnerUpdateSerializer(snippet, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, id, format=None):
-        snippet = self.get_object(id)
+    def delete(self, request, token, format=None):
+        snippet = self.get_object(token)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

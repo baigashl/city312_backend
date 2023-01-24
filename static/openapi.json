@@ -174,13 +174,13 @@
           ]
         }
       },
-      "/api/user/{id}/": {
+      "/api/user/{token}/": {
         "get": {
           "operationId": "retrieveUserDetailUpdateDelete",
           "description": "",
           "parameters": [
             {
-              "name": "id",
+              "name": "token",
               "in": "path",
               "required": true,
               "description": "",
@@ -193,7 +193,9 @@
             "200": {
               "content": {
                 "application/json": {
-                  "schema": {}
+                  "schema": {
+                    "$ref": "#/components/schemas/UserUpdate"
+                  }
                 }
               },
               "description": ""
@@ -208,7 +210,7 @@
           "description": "",
           "parameters": [
             {
-              "name": "id",
+              "name": "token",
               "in": "path",
               "required": true,
               "description": "",
@@ -218,17 +220,31 @@
             }
           ],
           "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {}
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
               }
             }
-          },
+          }
+        },
           "responses": {
             "200": {
               "content": {
                 "application/json": {
-                  "schema": {}
+                  "schema": {
+                    "$ref": "#/components/schemas/UserUpdate"
+                  }
                 }
               },
               "description": ""
@@ -243,7 +259,7 @@
           "description": "",
           "parameters": [
             {
-              "name": "id",
+              "name": "token",
               "in": "path",
               "required": true,
               "description": "",
@@ -262,13 +278,13 @@
           ]
         }
       },
-      "/api/user/partner/{id}/": {
+      "/api/user/partner/{token}/": {
         "get": {
           "operationId": "retrievePartnerDetailUpdateDelete",
           "description": "",
           "parameters": [
             {
-              "name": "id",
+              "name": "token",
               "in": "path",
               "required": true,
               "description": "",
@@ -281,7 +297,9 @@
             "200": {
               "content": {
                 "application/json": {
-                  "schema": {}
+                  "schema": {
+                    "$ref": "#/components/schemas/PartnerUpdate"
+                  }
                 }
               },
               "description": ""
@@ -296,7 +314,7 @@
           "description": "",
           "parameters": [
             {
-              "name": "id",
+              "name": "token",
               "in": "path",
               "required": true,
               "description": "",
@@ -308,7 +326,19 @@
           "requestBody": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerUpdate"
+                }
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerUpdate"
+                }
+              },
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerUpdate"
+                }
               }
             }
           },
@@ -316,7 +346,9 @@
             "200": {
               "content": {
                 "application/json": {
-                  "schema": {}
+                  "schema": {
+                    "$ref": "#/components/schemas/PartnerUpdate"
+                  }
                 }
               },
               "description": ""
@@ -350,18 +382,30 @@
           ]
         }
       },
-      "/api/discount/": {
+      "/api/discount/?page={page_num}/": {
         "get": {
           "operationId": "listDiscounts",
           "description": "",
-          "parameters": [],
+          "parameters": [
+            {
+              "name": "page_num",
+              "in": "path",
+              "required": true,
+              "description": "",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "responses": {
             "200": {
               "content": {
                 "application/json": {
                   "schema": {
                     "type": "array",
-                    "items": {}
+                    "items": {
+                    "$ref": "#/components/schemas/Discount"
+                  }
                   }
                 }
               },
@@ -369,7 +413,115 @@
             }
           },
           "tags": [
-            "api"
+            "discount"
+          ]
+        }
+      },
+      "/api/discount/{id}/detail/": {
+        "get": {
+          "operationId": "DiscountDetail",
+          "description": "",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Discount"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "discount"
+          ]
+        }
+      },
+      "/api/discount/{id}/update/": {
+        "put": {
+          "operationId": "updatePartnerDetailUpdateDelete",
+          "description": "",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Discount"
+                }
+              },
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "$ref": "#/components/schemas/Discount"
+                }
+              },
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Discount"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Discount"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "discount"
+          ]
+        }
+      },
+      "/api/discount/{id}/delete/": {
+        "delete": {
+          "operationId": "DiscountDelete",
+          "description": "",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "discount"
           ]
         }
       },
@@ -1218,7 +1370,7 @@
             }
           },
           "tags": [
-            "api"
+            "discount"
           ]
         }
       },
@@ -1480,44 +1632,77 @@
               "type": "integer",
               "readOnly": true
             },
+            "category_id": {
+              "type": "integer",
+              "nullable": false
+            },
+            "partner_id": {
+              "type": "integer",
+              "nullable": false
+            },
+            "discount_type": {
+              "type": "string",
+              "maxLength": 255
+            },
             "name": {
               "type": "string",
               "maxLength": 255
             },
-            "contacts": {
+            "price_before": {
+              "type": "integer",
+              "nullable": false
+            },
+            "price": {
+              "type": "integer",
+              "nullable": false
+            },
+            "description": {
+              "type": "string"
+            },
+            "promotion_condition": {
               "type": "string",
               "maxLength": 500
             },
-            "social_link": {
-              "type": "string"
-            },
-            "operating_mode": {
+            "percentage": {
               "type": "string",
-              "maxLength": 255
+              "maxLength": 500
+            },
+            "cashback": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "referral_link": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "start_of_action": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "end_of_action": {
+              "type": "string",
+              "maxLength": 500
             },
             "image": {
               "type": "string",
               "format": "binary",
               "nullable": true
-            },
-            "category_id": {
-              "type": "integer",
-              "nullable": true
-            },
-            "partner_id": {
-              "type": "string"
-            },
-            "discount_type_id": {
-              "type": "integer",
-              "nullable": true
             }
           },
           "required": [
+            "category_id",
+            "partner_id",
+            "discount_type",
             "name",
-            "contacts",
-            "social_link",
-            "operating_mode",
-            "partner_id"
+            "price_before",
+            "price",
+            "image",
+            "description",
+            "promotion_condition",
+            "percentage",
+            "cashback",
+            "start_of_action",
+            "end_of_action"
           ]
         },
         "User": {
@@ -1563,6 +1748,54 @@
             "password2": {
               "type": "string",
               "maxLength": 255
+            }
+          },
+          "required": [
+            "name",
+            "email",
+            "second_name",
+            "date_of_birth",
+            "phone_number",
+            "image",
+            "password",
+            "password2"
+          ]
+        },
+        "UserUpdate": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "readOnly": true
+            },
+            "email": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "name": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "second_name": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "date_of_birth": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "phone_number": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "discount_card_number": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "image": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
             }
           },
           "required": [
@@ -1675,13 +1908,117 @@
             "activity_type",
             "brand_name",
             "organization_form",
-            "phone_number",
             "logo",
             "banner",
             "description",
             "inn",
+            "phone1",
+            "schedule",
+            "start",
+            "end",
             "password",
             "password2"
+          ]
+        },
+        "PartnerUpdate": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "readOnly": true
+            },
+            "email": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "activity_type": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "brand_name": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "organization_form": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "logo": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
+            },
+            "banner": {
+              "type": "string",
+              "format": "binary",
+              "nullable": true
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "inn": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "phone1": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "phone2": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "phone3": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "phone4": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "whatsapp": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "youtube": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "telegram": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "facebook": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "schedule": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "start": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "end": {
+              "type": "string",
+              "maxLength": 255
+            }
+          },
+          "required": [
+            "email",
+            "activity_type",
+            "brand_name",
+            "organization_form",
+            "logo",
+            "banner",
+            "description",
+            "inn",
+            "schedule",
+            "start",
+            "end",
+            "phone1"
           ]
         }
       }

@@ -6,11 +6,17 @@ from .views import (
     FavoriteCreateAPIView,
     GetUserFavoriteAPIView,
     FavoriteDetailAPIView,
+    DiscountDetailAPIView,
+    DiscountUpdateAPIView,
+    DiscountDeleteAPIView,
 )
 
 urlpatterns = [
     path('', DiscountListAPIView.as_view(), name='discount-list'),
     path('create/', DiscountCreateAPIView.as_view(), name='discount-create'),
+    path('<int:id>/deatil/', DiscountDetailAPIView.as_view(), name='discount-detail'),
+    path('<int:id>/update/', DiscountUpdateAPIView.as_view(), name='discount-update'),
+    path('<int:id>/delete/', DiscountDeleteAPIView.as_view(), name='discount-delete'),
 
     path('favorite/<int:user_id>/', GetUserFavoriteAPIView.as_view(), name='user-favorite'),
     path('favorite/', FavoriteListAPIView.as_view(), name='favorite-list'),
