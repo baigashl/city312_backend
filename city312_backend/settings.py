@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'rest_framework_swagger',
+    'drf_recaptcha',
 
     'apps.discount',
     'apps.cart',
@@ -57,6 +58,9 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'users.MyUser'
+
+
+DRF_RECAPTCHA_SECRET_KEY = "6LdwdL0jAAAAAOPInd6MM5Gg5j9-s1O9j0u99Gxs"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -96,24 +100,24 @@ WSGI_APPLICATION = 'city312_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ.get('POSTGRES_DB'),
+#         'USER': os.environ.get('POSTGRES_USER'),
+#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+#         'HOST': os.environ.get('POSTGRES_HOST'),
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation

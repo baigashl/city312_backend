@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, status, filters
+from rest_framework import permissions, status, filters, generics
 from rest_framework.generics import CreateAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
@@ -12,7 +12,7 @@ from .serializers import DiscountSerializer, DiscountTypeSerializer, FavoriteSer
 
 from rest_framework import pagination
 
-from ..users.permissions import AnonPermissionOnly
+from ..users.permissions import AnonPermissionOnly, IsPartnerPermission, IsAdminPermission, IsOwnerOrReadOnly
 
 
 class CustomPagination(pagination.PageNumberPagination):
@@ -20,6 +20,14 @@ class CustomPagination(pagination.PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 50
     page_query_param = 'p'
+
+
+class DiscountFilterListView(generics.ListAPIView):
+    queryset = Discount.objects.all()
+    serializer_class = DiscountSerializer
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    ordering_fields = ['name', 'price', 'cashback']
+    search_fields = ['name', 'partner_id__brand_name']
 
 
 class DiscountListAPIView(APIView):
@@ -67,7 +75,7 @@ class DiscountListAPIView(APIView):
 #     serializer_class = DiscountSerializer
 
 class DiscountCreateAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, IsPartnerPermission]
     # authentication_classes = []
     # parser_classes = [JSONParser]
 
@@ -96,7 +104,7 @@ class DiscountDetailAPIView(APIView):
 
 
 class DiscountUpdateAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     # parser_classes = [JSONParser]
 
     def get_object(self, id):
@@ -115,8 +123,8 @@ class DiscountUpdateAPIView(APIView):
 
 
 class DiscountDeleteAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
-    parser_classes = [JSONParser]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    # parser_classes = [JSONParser]
 
     def get_object(self, id):
         try:

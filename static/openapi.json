@@ -98,7 +98,8 @@
                 "application/json": {
                   "schema": {
                     "type": "array",
-                    "items": {}
+                    "items": {
+                    "$ref": "#/components/schemas/User"}
                   }
                 }
               },
@@ -106,7 +107,7 @@
             }
           },
           "tags": [
-            "api"
+            "users"
           ]
         }
       },
@@ -121,7 +122,8 @@
                 "application/json": {
                   "schema": {
                     "type": "array",
-                    "items": {}
+                    "items": {
+                    "$ref": "#/components/schemas/PartnerUpdate"}
                   }
                 }
               },
@@ -129,7 +131,7 @@
             }
           },
           "tags": [
-            "api"
+            "partners"
           ]
         }
       },
@@ -174,7 +176,7 @@
           ]
         }
       },
-      "/api/user/{token}/": {
+      "/api/user/profile/{token}/": {
         "get": {
           "operationId": "retrieveUserDetailUpdateDelete",
           "description": "",
@@ -202,7 +204,7 @@
             }
           },
           "tags": [
-            "api"
+            "user profile"
           ]
         },
         "put": {
@@ -251,7 +253,7 @@
             }
           },
           "tags": [
-            "api"
+            "user profile"
           ]
         },
         "delete": {
@@ -274,11 +276,42 @@
             }
           },
           "tags": [
-            "api"
+            "user profile"
+          ]
+        }
+      },"/api/user/detail/{id}/": {
+        "get": {
+          "operationId": "UserDetail",
+          "description": "",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserUpdate"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "user detail"
           ]
         }
       },
-      "/api/user/partner/{token}/": {
+      "/api/user/partner/profile/{token}/": {
         "get": {
           "operationId": "retrievePartnerDetailUpdateDelete",
           "description": "",
@@ -289,7 +322,7 @@
               "required": true,
               "description": "",
               "schema": {
-                "type": "string"
+                    "$ref": "#/components/schemas/PartnerUpdate"
               }
             }
           ],
@@ -306,7 +339,7 @@
             }
           },
           "tags": [
-            "api"
+            "partner profile"
           ]
         },
         "put": {
@@ -355,7 +388,7 @@
             }
           },
           "tags": [
-            "api"
+            "partner profile"
           ]
         },
         "delete": {
@@ -378,7 +411,38 @@
             }
           },
           "tags": [
-            "api"
+            "partner profile"
+          ]
+        }
+      },"/api/user/partner/detail/{id}/": {
+        "get": {
+          "operationId": "PartnerDetail",
+          "description": "",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "description": "",
+              "schema": {
+                    "$ref": "#/components/schemas/PartnerUpdate"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/PartnerUpdate"
+                  }
+                }
+              },
+              "description": ""
+            }
+          },
+          "tags": [
+            "partner detail"
           ]
         }
       },
@@ -451,12 +515,21 @@
       },
       "/api/discount/{id}/update/": {
         "put": {
-          "operationId": "updatePartnerDetailUpdateDelete",
+          "operationId": "DiscountUpdate",
           "description": "",
           "parameters": [
             {
               "name": "id",
               "in": "path",
+              "required": true,
+              "description": "",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "token",
+              "in": "header",
               "required": true,
               "description": "",
               "schema": {
@@ -508,6 +581,15 @@
             {
               "name": "id",
               "in": "path",
+              "required": true,
+              "description": "",
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "token",
+              "in": "header",
               "required": true,
               "description": "",
               "schema": {
@@ -1337,7 +1419,17 @@
         "post": {
           "operationId": "createDiscount",
           "description": "",
-          "parameters": [],
+          "parameters": [
+            {
+              "name": "token",
+              "in": "header",
+              "required": true,
+              "description": "",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "requestBody": {
             "content": {
               "application/json": {
@@ -1664,12 +1756,12 @@
               "maxLength": 500
             },
             "percentage": {
-              "type": "string",
-              "maxLength": 500
+              "type": "integer",
+              "nullable": false
             },
             "cashback": {
-              "type": "string",
-              "maxLength": 500
+              "type": "integer",
+              "nullable": false
             },
             "referral_link": {
               "type": "string",

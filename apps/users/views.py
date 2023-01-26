@@ -1,7 +1,9 @@
+import requests
 from django.http import Http404
 import jwt
 from django.shortcuts import render
 from rest_framework import permissions, status
+from rest_framework.decorators import api_view
 from rest_framework.generics import CreateAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
@@ -15,12 +17,25 @@ from .serializers import MyTokenObtainPairSerializer, UserRegisterSerializer, Us
 from .models import User, Partner
 from rest_framework.schemas.openapi import AutoSchema
 from ..discount.serializers import DiscountSerializer
+from city312_backend.settings import SECRET_KEY, DRF_RECAPTCHA_SECRET_KEY
 
+
+@api_view(['POST', 'GET'])
+def recaptcha(request):
+    if request.method == 'POST':
+        r = requests.post(
+          'https://www.google.com/recaptcha/api/siteverify',
+          data={
+            'secret': DRF_RECAPTCHA_SECRET_KEY,
+            'response': request.data['captcha_value'],
+          }
+        )
+        return Response({'captcha': r.json()})
+    return Response('gfjg')
 
 
 def decode_auth_token(token):
     try:
-        SECRET_KEY = 'django-insecure-xuit0+ra8+y(ek%las(39)tb+d&uz02ku9okd2fsrl)747@8vb'
         user = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         msg = 'Signature has expired. Login again.'
@@ -77,7 +92,7 @@ class UserListAPIView(APIView):
         return Response(serializer.data)
 
 
-class UserDetailUpdateDeleteAPIView(APIView):
+class UserProfileUpdateDeleteAPIView(APIView):
     permission_classes = [permissions.AllowAny]
     # authentication_classes = [SessionAuthentication]
     parser_classes = [JSONParser]
@@ -106,6 +121,23 @@ class UserDetailUpdateDeleteAPIView(APIView):
         snippet = self.get_object(token)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class UserDetailAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    # authentication_classes = [SessionAuthentication]
+    parser_classes = [JSONParser]
+
+    def get_object(self, id):
+        try:
+            return User.objects.get(id=id)
+        except User.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id, format=None):
+        snippet = self.get_object(id)
+        serializer = UserSerializer(snippet)
+        return Response(serializer.data)
 
 
 #########################################Following
@@ -146,12 +178,12 @@ class PartnerRegisterView(APIView):
         serializer = PartnerRegisterSerializer(data=request.data)
         if serializer.is_valid():
             if 'logo' in list(request.data.keys()):
-                logo = request.data['logo'],
+                logo = request.FILES['logo'],
             else:
                 logo = None
 
             if 'banner' in list(request.data.keys()):
-                banner = request.data['banner'],
+                banner = request.FILES['banner'],
             else:
                 banner = None
 
@@ -193,7 +225,7 @@ class PartnerListAPIView(APIView):
         return Response(serializer.data)
 
 
-class PartnerDetailUpdateDeleteAPIView(APIView):
+class PartnerProfileUpdateDeleteAPIView(APIView):
     permission_classes = [permissions.AllowAny]
     # authentication_classes = [SessionAuthentication]
     parser_classes = [JSONParser]
@@ -223,6 +255,23 @@ class PartnerDetailUpdateDeleteAPIView(APIView):
         snippet = self.get_object(token)
         snippet.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PartnerDetailAPIView(APIView):
+    permission_classes = [permissions.AllowAny]
+    # authentication_classes = [SessionAuthentication]
+    parser_classes = [JSONParser]
+
+    def get_object(self, id):
+        try:
+            return Partner.objects.get(id=id)
+        except Partner.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id, format=None):
+        partner = self.get_object(id)
+        serializer1 = PartnerSerializer(partner)
+        return Response(serializer1.data, status=status.HTTP_200_OK)
 
 
 ###############################################################################Admin
