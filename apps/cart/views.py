@@ -1,14 +1,11 @@
 from django.http import Http404
-from django.shortcuts import render
 from rest_framework import permissions, status
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from apps.cart.models import Cart
 from .serializers import CartSerializer
 from apps.discount.serializers import DiscountSerializer
-from apps.discount.models import Discount
 
 
 class GetUserCartAPIView(APIView):
@@ -17,7 +14,6 @@ class GetUserCartAPIView(APIView):
     def get(self, request, user_id):
         snippet = Cart.objects.get(user_id=user_id)
         discounts = snippet.discount.all()
-        print('asdasdasd', discounts)
         serializer = CartSerializer(snippet)
         serializer2 = DiscountSerializer(discounts, many=True)
         data = serializer.data

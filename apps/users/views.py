@@ -5,7 +5,7 @@ from django.shortcuts import render
 from rest_framework import permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.generics import CreateAPIView
-from rest_framework.parsers import JSONParser
+from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt import exceptions
@@ -172,18 +172,22 @@ class PartnerLoginView(TokenObtainPairView):
 class PartnerRegisterView(APIView):
     permission_classes = [permissions.AllowAny]
     # authentication_classes = []
-    parser_classes = [JSONParser]
+    parser_classes = [JSONParser, MultiPartParser]
 
     def post(self, request):
         serializer = PartnerRegisterSerializer(data=request.data)
         if serializer.is_valid():
             if 'logo' in list(request.data.keys()):
-                logo = request.FILES['logo'],
+                file = request.FILES
+                logo = file['logo']
+                print(logo)
             else:
                 logo = None
 
             if 'banner' in list(request.data.keys()):
-                banner = request.FILES['banner'],
+                file = request.FILES
+                banner = file['banner']
+                print(file)
             else:
                 banner = None
 
