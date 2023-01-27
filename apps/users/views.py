@@ -180,16 +180,29 @@ class PartnerRegisterView(APIView):
             if 'logo' in list(request.data.keys()):
                 file = request.FILES
                 logo = file['logo']
-                print(logo)
             else:
                 logo = None
 
             if 'banner' in list(request.data.keys()):
                 file = request.FILES
                 banner = file['banner']
-                print(file)
             else:
                 banner = None
+
+            if 'phone2' in list(request.data.keys()):
+                phone2 = request.data['phone2']
+            else:
+                phone2 = None
+
+            if 'phone3' in list(request.data.keys()):
+                phone3 = request.data['phone3']
+            else:
+                phone3 = None
+
+            if 'phone4' in list(request.data.keys()):
+                phone4 = request.data['phone4']
+            else:
+                phone4 = None
 
             user = Partner.objects.create(
                 email=request.data['email'],
@@ -202,9 +215,9 @@ class PartnerRegisterView(APIView):
                 logo=logo,
                 banner=banner,
                 phone1=request.data['phone1'],
-                phone2=request.data['phone2'],
-                phone3=request.data['phone3'],
-                phone4=request.data['phone4'],
+                phone2=phone2,
+                phone3=phone3,
+                phone4=phone4,
                 whatsapp=request.data['whatsapp'],
                 youtube=request.data['youtube'],
                 telegram=request.data['telegram'],
