@@ -2,9 +2,9 @@ from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, status, filters, generics
+from rest_framework import permissions, status, filters, generics, viewsets
 from rest_framework.generics import CreateAPIView
-from rest_framework.parsers import JSONParser
+from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Discount, DiscountType, Favorite
@@ -22,126 +22,135 @@ class CustomPagination(pagination.PageNumberPagination):
     page_query_param = 'p'
 
 
-class DiscountFilterListView(generics.ListAPIView):
+class DiscountViewSet(viewsets.ModelViewSet):
     queryset = Discount.objects.all()
     serializer_class = DiscountSerializer
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['name', 'price', 'cashback']
     search_fields = ['name', 'partner_id__brand_name']
+    parser_classes = (MultiPartParser, FormParser)
 
 
-class DiscountListAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
-    # authentication_classes = []
-    parser_classes = [JSONParser]
-
-
-    def get(self, request):
-        snippets = Discount.objects.all()
-        print(snippets.count())
-        serializer = DiscountSerializer(snippets, many=True)
-        page_num = int(self.request.query_params.get('page'))
-        return Response({
-            'count': snippets.count(),
-            'success': True,
-            'results': serializer.data[page_num*10-10:page_num*10],
-        }, status=status.HTTP_200_OK)
-
-
-# class DiscountListAPIView(APIView, CustomPagination):
+# class DiscountFilterListView(generics.ListAPIView):
+#     queryset = Discount.objects.all()
+#     serializer_class = DiscountSerializer
+#     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+#     ordering_fields = ['name', 'price', 'cashback']
+#     search_fields = ['name', 'partner_id__brand_name']
+#
+#
+# class DiscountListAPIView(APIView):
 #     permission_classes = [permissions.AllowAny]
 #     # authentication_classes = []
 #     parser_classes = [JSONParser]
 #
+#
 #     def get(self, request):
 #         snippets = Discount.objects.all()
 #         print(snippets.count())
-#         # serializer = DiscountSerializer(snippets, many=True)
-#         page_number = self.request.query_params.get('page_number ', 1)
-#         page_size = self.request.query_params.get('page_size ', 10)
-#
-#         paginator = Paginator(snippets, page_size)
-#         serializer = DiscountSerializer(paginator.page(page_number), many=True, context={'request': request})
+#         serializer = DiscountSerializer(snippets, many=True)
+#         page_num = int(self.request.query_params.get('page'))
 #         return Response({
 #             'count': snippets.count(),
 #             'success': True,
-#             'results': serializer.data,
+#             'results': serializer.data[page_num*10-10:page_num*10],
 #         }, status=status.HTTP_200_OK)
-
-
-# class DiscountCreateAPIView(CreateAPIView):
-#     queryset = Discount.objects.all()
-#     permission_classes = (permissions.AllowAny,)
-#     serializer_class = DiscountSerializer
-
-class DiscountCreateAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated, IsPartnerPermission]
-    # authentication_classes = []
-    # parser_classes = [JSONParser]
-
-    def post(self, request):
-        serializer = DiscountSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class DiscountDetailAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
-    # parser_classes = [JSONParser]
-
-    def get_object(self, id):
-        try:
-            return Discount.objects.get(id=id)
-        except Discount.DoesNotExist:
-            raise Http404
-
-    def get(self, request, user_id, format=None):
-        snippet = self.get_object(user_id)
-        serializer = DiscountSerializer(snippet)
-        return Response(serializer.data)
-
-
-class DiscountUpdateAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
-    # parser_classes = [JSONParser]
-
-    def get_object(self, id):
-        try:
-            return Discount.objects.get(id=id)
-        except Discount.DoesNotExist:
-            raise Http404
-
-    def put(self, request, id, format=None):
-        snippet = self.get_object(id)
-        serializer = DiscountSerializer(snippet, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class DiscountDeleteAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
-    # parser_classes = [JSONParser]
-
-    def get_object(self, id):
-        try:
-            return Discount.objects.get(id=id)
-        except Discount.DoesNotExist:
-            raise Http404
-
-    def delete(self, request, id, format=None):
-        snippet = self.get_object(id)
-        snippet.delete()
-        return Response(status.HTTP_204_NO_CONTENT)
-
-
-
-
-############################################################################## FAVORITE
-
+#
+#
+# # class DiscountListAPIView(APIView, CustomPagination):
+# #     permission_classes = [permissions.AllowAny]
+# #     # authentication_classes = []
+# #     parser_classes = [JSONParser]
+# #
+# #     def get(self, request):
+# #         snippets = Discount.objects.all()
+# #         print(snippets.count())
+# #         # serializer = DiscountSerializer(snippets, many=True)
+# #         page_number = self.request.query_params.get('page_number ', 1)
+# #         page_size = self.request.query_params.get('page_size ', 10)
+# #
+# #         paginator = Paginator(snippets, page_size)
+# #         serializer = DiscountSerializer(paginator.page(page_number), many=True, context={'request': request})
+# #         return Response({
+# #             'count': snippets.count(),
+# #             'success': True,
+# #             'results': serializer.data,
+# #         }, status=status.HTTP_200_OK)
+#
+#
+# # class DiscountCreateAPIView(CreateAPIView):
+# #     queryset = Discount.objects.all()
+# #     permission_classes = (permissions.AllowAny,)
+# #     serializer_class = DiscountSerializer
+#
+# class DiscountCreateAPIView(APIView):
+#     permission_classes = [permissions.IsAuthenticated, IsPartnerPermission]
+#     # authentication_classes = []
+#     # parser_classes = [JSONParser]
+#
+#     def post(self, request):
+#         serializer = DiscountSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#
+# class DiscountDetailAPIView(APIView):
+#     permission_classes = [permissions.AllowAny]
+#     # parser_classes = [JSONParser]
+#
+#     def get_object(self, id):
+#         try:
+#             return Discount.objects.get(id=id)
+#         except Discount.DoesNotExist:
+#             raise Http404
+#
+#     def get(self, request, user_id, format=None):
+#         snippet = self.get_object(user_id)
+#         serializer = DiscountSerializer(snippet)
+#         return Response(serializer.data)
+#
+#
+# class DiscountUpdateAPIView(APIView):
+#     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+#     # parser_classes = [JSONParser]
+#
+#     def get_object(self, id):
+#         try:
+#             return Discount.objects.get(id=id)
+#         except Discount.DoesNotExist:
+#             raise Http404
+#
+#     def put(self, request, id, format=None):
+#         snippet = self.get_object(id)
+#         serializer = DiscountSerializer(snippet, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#
+# class DiscountDeleteAPIView(APIView):
+#     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+#     # parser_classes = [JSONParser]
+#
+#     def get_object(self, id):
+#         try:
+#             return Discount.objects.get(id=id)
+#         except Discount.DoesNotExist:
+#             raise Http404
+#
+#     def delete(self, request, id, format=None):
+#         snippet = self.get_object(id)
+#         snippet.delete()
+#         return Response(status.HTTP_204_NO_CONTENT)
+#
+#
+#
+#
+# ############################################################################## FAVORITE
+#
 
 class GetUserFavoriteAPIView(APIView):
     permission_classes = [permissions.AllowAny]

@@ -116,7 +116,7 @@ DATABASES = {
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': '5432',
+        'PORT': os.environ.get('POSTGRES_PORT'),
     }
 }
 
@@ -143,6 +143,12 @@ AUTH_PASSWORD_VALIDATORS = [
 from datetime import timedelta
 
 REST_FRAMEWORK = {
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ),
+
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
