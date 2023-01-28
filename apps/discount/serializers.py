@@ -1,11 +1,10 @@
-import django_filters
-
 from .models import Discount, DiscountType, Favorite
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 
 class DiscountSerializer(serializers.ModelSerializer):
+    image = serializers.ListField(child=serializers.ImageField(use_url=True))
 
     class Meta:
         model = Discount
