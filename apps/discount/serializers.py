@@ -4,8 +4,6 @@ from rest_framework.reverse import reverse
 
 
 class DiscountSerializer(serializers.ModelSerializer):
-    image = serializers.ListField(child=serializers.ImageField(use_url=True))
-
     class Meta:
         model = Discount
         fields = '__all__'
@@ -13,6 +11,12 @@ class DiscountSerializer(serializers.ModelSerializer):
     def get_url(self, obj):
         request = self.context.get('request')
         return reverse("detail", kwargs={'id': obj.id}, request=request)
+
+
+class MultipleImageSerializer(serializers.Serializer):
+    images = serializers.ListField(
+        child=serializers.ImageField()
+    )
 
 
 class DiscountTypeSerializer(serializers.ModelSerializer):

@@ -3,12 +3,13 @@ from django.http import Http404
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, status, filters, generics, viewsets
+from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
 from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Discount, DiscountType, Favorite
-from .serializers import DiscountSerializer, DiscountTypeSerializer, FavoriteSerializer
+from .serializers import DiscountSerializer, DiscountTypeSerializer, FavoriteSerializer, MultipleImageSerializer
 
 from rest_framework import pagination
 
@@ -28,7 +29,22 @@ class DiscountViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['name', 'price', 'cashback']
     search_fields = ['name', 'partner_id__brand_name']
-    parser_classes = (MultiPartParser, FormParser)
+
+    @action(detail=False, methods=["POST"])
+    def multiple_upload(self, request, *args, **kwargs):
+        serializer = MultipleImageSerializer(data=request.data or None)
+        serializer.is_valid(raise_exception=True)
+        images = serializer.validated_data.get("images")
+
+        images_list = []
+        for image in images:
+            images_list.append(
+                Discount(image=image)
+            )
+        if images_list:
+            Discount.objects.bulk_create(images_list)
+
+        return Response("Success")
 
 
 # class DiscountFilterListView(generics.ListAPIView):
