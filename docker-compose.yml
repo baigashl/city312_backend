@@ -28,6 +28,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/backend/Dockerfile
+    ports:
+      - 8000:8000
     volumes:
       - static_volume:/app/backend/staticfiles
       - media_volume:/app/backend/media

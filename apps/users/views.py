@@ -124,7 +124,7 @@ class UserProfileUpdateDeleteAPIView(APIView):
 
 
 class UserDetailAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AnonPermissionOnly]
     # authentication_classes = [SessionAuthentication]
     parser_classes = [JSONParser]
 
@@ -170,7 +170,7 @@ class PartnerLoginView(TokenObtainPairView):
 
 
 class PartnerRegisterView(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = (AnonPermissionOnly, )
     # authentication_classes = []
     parser_classes = [JSONParser, MultiPartParser]
 
