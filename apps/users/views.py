@@ -170,7 +170,7 @@ class PartnerLoginView(TokenObtainPairView):
 
 
 class PartnerRegisterView(APIView):
-    permission_classes = (AnonPermissionOnly, )
+    permission_classes = [permissions.AllowAny]
     # authentication_classes = []
     parser_classes = [JSONParser, MultiPartParser]
 
