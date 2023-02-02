@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import MyUser, User
-from .models import Partner
+from apps.users.models import User, PartnerProfile, ClientProfile
 
-admin.site.register(Partner)
-admin.site.register(MyUser)
 admin.site.register(User)
+admin.site.register(PartnerProfile)
+admin.site.register(ClientProfile)
