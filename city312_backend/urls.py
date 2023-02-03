@@ -33,6 +33,7 @@ urlpatterns = [
     path('api/activity_type/', include('apps.activity_type.urls')),
     path('api/cart/', include('apps.cart.urls')),
     path('api/review/', include('apps.review.urls')),
+    path('rest-login/', include("rest_framework.urls")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

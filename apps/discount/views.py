@@ -22,7 +22,7 @@ class DiscountListView(ListAPIView):
     queryset = Discount.objects.all()
     serializer_class = DiscountSerializer
     permission_classes = [permissions.AllowAny]
-    parser_class = [MultiPartParser, FormParser]
+    parser_class = [MultiPartParser, FormParser, JSONParser]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['name', 'price', 'cashback']
     search_fields = ['name', 'partner_id__brand_name']

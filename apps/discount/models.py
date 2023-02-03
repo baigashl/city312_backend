@@ -1,7 +1,10 @@
 from django.db import models
 
 from apps.activity_type.models import Category
-from apps.users.models import Partner, User
+from apps.users.models import (
+    PartnerProfile,
+    ClientProfile,
+)
 
 
 class DiscountType(models.Model):
@@ -14,7 +17,7 @@ def upload_image(instance, filename):
 
 class Discount(models.Model):
     category_id = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
-    partner_id = models.ForeignKey(Partner, on_delete=models.CASCADE)
+    partner_id = models.ForeignKey(PartnerProfile, on_delete=models.CASCADE)
     discount_type = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     price_before = models.IntegerField(default=0)
@@ -37,8 +40,8 @@ class DiscountImage(models.Model):
 
 
 class Favorite(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    discount = models.ManyToManyField(Discount, null=True, blank=True)
+    user = models.OneToOneField(ClientProfile, on_delete=models.CASCADE)
+    discount = models.ManyToManyField(Discount)
 
     def __str__(self):
         return f'{self.user}'
