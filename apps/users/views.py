@@ -6,8 +6,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework import mixins
+from rest_framework.viewsets import ModelViewSet
 
 from city312_backend.settings import SECRET_KEY, DRF_RECAPTCHA_SECRET_KEY
 from apps.users.models import (
@@ -16,7 +15,7 @@ from apps.users.models import (
     PartnerProfile,
 )
 from apps.users.serializers import (
-    RegisterUserSerializer,
+    UserSerializer,
     ClientProfileSerializer,
     PartnerProfileSerializer,
     LoginUserSerializer,
@@ -51,17 +50,51 @@ def decode_auth_token(token):
     return user
 
 
-class ClientRegisterView(CreateAPIView):
+class ClientProfileView(ModelViewSet):
+    """Client profile view"""
+
     serializer_class = ClientProfileSerializer
     queryset = ClientProfile.objects.all()
 
+    def update(self, request, *args, **kwargs):
+        """Updating client profile data and password"""
 
-class PartnerRegisterView(CreateAPIView):
+        partial = kwargs.pop('partial', True)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        if serializer.is_valid():
+            serializer.save()
+            if instance.user:
+                instance.user.set_password(instance.user.password)
+                instance.user.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+
+class PartnerProfileView(ModelViewSet):
+    """Partner profile view"""
+
     serializer_class = PartnerProfileSerializer
     queryset = PartnerProfile.objects.all()
 
+    def update(self, request, *args, **kwargs):
+        """Updating partner profile data and password"""
+
+        partial = kwargs.pop('partial', True)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        if serializer.is_valid():
+            serializer.save()
+            if instance.user:
+                instance.user.set_password(instance.user.password)
+                instance.user.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
 
 class LoginView(CreateAPIView):
+    """All user login view """
+
     serializer_class = LoginUserSerializer
 
     def post(self, request, *args, **kwargs):
