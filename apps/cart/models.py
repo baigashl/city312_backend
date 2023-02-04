@@ -11,7 +11,7 @@ class Cart(models.Model):
     email = models.EmailField(null=True)
     name = models.CharField(max_length=50, null=True)
     discounts = models.ManyToManyField(Discount, through='CartDiscount')
-    total_price = models.IntegerField(default=50)
+    total_price = models.IntegerField(default=0)
 
 
 class CartDiscount(models.Model):
