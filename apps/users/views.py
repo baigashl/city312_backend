@@ -5,7 +5,7 @@ from django.shortcuts import render
 from rest_framework import permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.generics import CreateAPIView
-from rest_framework.parsers import JSONParser
+from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt import exceptions
@@ -124,7 +124,7 @@ class UserProfileUpdateDeleteAPIView(APIView):
 
 
 class UserDetailAPIView(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AnonPermissionOnly]
     # authentication_classes = [SessionAuthentication]
     parser_classes = [JSONParser]
 
@@ -170,22 +170,39 @@ class PartnerLoginView(TokenObtainPairView):
 
 
 class PartnerRegisterView(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = (AnonPermissionOnly, )
     # authentication_classes = []
-    parser_classes = [JSONParser]
+    parser_classes = [JSONParser, MultiPartParser]
 
     def post(self, request):
         serializer = PartnerRegisterSerializer(data=request.data)
         if serializer.is_valid():
             if 'logo' in list(request.data.keys()):
-                logo = request.FILES['logo'],
+                file = request.FILES
+                logo = file['logo']
             else:
                 logo = None
 
             if 'banner' in list(request.data.keys()):
-                banner = request.FILES['banner'],
+                file = request.FILES
+                banner = file['banner']
             else:
                 banner = None
+
+            if 'phone2' in list(request.data.keys()):
+                phone2 = request.data['phone2']
+            else:
+                phone2 = None
+
+            if 'phone3' in list(request.data.keys()):
+                phone3 = request.data['phone3']
+            else:
+                phone3 = None
+
+            if 'phone4' in list(request.data.keys()):
+                phone4 = request.data['phone4']
+            else:
+                phone4 = None
 
             user = Partner.objects.create(
                 email=request.data['email'],
@@ -198,9 +215,9 @@ class PartnerRegisterView(APIView):
                 logo=logo,
                 banner=banner,
                 phone1=request.data['phone1'],
-                phone2=request.data['phone2'],
-                phone3=request.data['phone3'],
-                phone4=request.data['phone4'],
+                phone2=phone2,
+                phone3=phone3,
+                phone4=phone4,
                 whatsapp=request.data['whatsapp'],
                 youtube=request.data['youtube'],
                 telegram=request.data['telegram'],

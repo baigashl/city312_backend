@@ -37,7 +37,7 @@ class Partner(MyUser):
     activity_type = models.CharField(max_length=255, null=False, blank=False)
     brand_name = models.CharField(max_length=255, null=False, blank=False)
     organization_form = models.CharField(max_length=255, null=False, blank=False)
-    description = models.TextField(max_length=1000, null=True, blank=True)
+    description = models.CharField(max_length=1000, null=True, blank=True)
     inn = models.CharField(max_length=255, null=False, blank=False)
     isVip = models.BooleanField(default=False)
     transaction_quantity = models.IntegerField(default=0, null=True, blank=True)
