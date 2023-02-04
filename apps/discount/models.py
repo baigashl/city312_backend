@@ -38,7 +38,7 @@ class DiscountImage(models.Model):
 
 class Favorite(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    discount = models.ManyToManyField(Discount, null=True, blank=True)
+    discount = models.ManyToManyField(Discount)
 
     def __str__(self):
         return f'{self.user}'
