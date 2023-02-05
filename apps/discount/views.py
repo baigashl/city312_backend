@@ -18,7 +18,7 @@ from ..users.permissions import AnonPermissionOnly
 #     page_query_param = 'p'
 
 ###################################################################
-class DiscountListView(ListAPIView):
+class DiscountViewSet(viewsets.ModelViewSet):
     queryset = Discount.objects.all()
     serializer_class = DiscountSerializer
     permission_classes = [permissions.AllowAny]
@@ -28,43 +28,7 @@ class DiscountListView(ListAPIView):
     search_fields = ['name', 'partner_id__brand_name']
 ##################################################################################
 
-class DiscountCreateView(APIView):
-    permission_classes = [permissions.AllowAny]
-    # authentication_classes = []
-    parser_classes = [JSONParser, MultiPartParser]
-    def post(self, request):
-        serializer = DiscountSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class DiscountDetailUpdateDeleteView(APIView):
-    permission_classes = [permissions.AllowAny]
-    # authentication_classes = []
-    parser_classes = [JSONParser, MultiPartParser]
-
-    def get_object(self, id):
-        try:
-            return Discount.objects.get(id=id)
-        except Discount.DoesNotExist:
-            raise Http404
-
-    def get(self, request, id):
-        snippet = self.get_object(id)
-        serializer1 = DiscountSerializer(snippet)
-        return Response(serializer1.data, status=status.HTTP_200_OK)
-
-    # def put(self, request, id):
-    #     discount = self.get_object(id=id)
-    #     serializer = DiscountUpdateSerializer(discount, data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         if request.data['new_images']:
-    #             for image in request.data['new_images']:
-    #
-    #         return Response(serializer.data, status=status.HTTP_200_OK)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
