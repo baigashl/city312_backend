@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework_recaptcha.fields import ReCaptchaField
+
 from apps.users.models import (
     User,
     ClientProfile,
@@ -27,6 +29,7 @@ class ClientProfileSerializer(serializers.ModelSerializer):
     """Serializer for ClientProfile model"""
 
     user = UserSerializer()
+    captcha = ReCaptchaField()
 
     class Meta:
         model = ClientProfile
@@ -59,6 +62,7 @@ class PartnerProfileSerializer(serializers.ModelSerializer):
     """Serializer for PartnerProfile model"""
 
     user = UserSerializer()
+    captcha = ReCaptchaField()
 
     class Meta:
         model = PartnerProfile
@@ -88,9 +92,12 @@ class PartnerProfileSerializer(serializers.ModelSerializer):
 
 
 class LoginUserSerializer(serializers.ModelSerializer):
+    captcha = ReCaptchaField()
+
     class Meta:
         model = User
         fields = [
             "email",
-            "password"
+            "password",
+            "captcha"
         ]
