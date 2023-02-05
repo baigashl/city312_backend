@@ -1,39 +1,22 @@
-import requests
 import jwt
-from rest_framework.decorators import api_view
-from rest_framework_simplejwt import exceptions
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
-from rest_framework.exceptions import AuthenticationFailed
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt import exceptions
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from city312_backend.settings import SECRET_KEY, DRF_RECAPTCHA_SECRET_KEY
 from apps.users.models import (
     User,
     ClientProfile,
     PartnerProfile,
 )
 from apps.users.serializers import (
-    UserSerializer,
     ClientProfileSerializer,
     PartnerProfileSerializer,
     LoginUserSerializer,
 )
-
-
-@api_view(['POST', 'GET'])
-def recaptcha(request):
-    if request.method == 'POST':
-        r = requests.post(
-          'https://www.google.com/recaptcha/api/siteverify',
-          data={
-            'secret': DRF_RECAPTCHA_SECRET_KEY,
-            'response': request.data['captcha_value'],
-          }
-        )
-        return Response({'captcha': r.json()})
-    return Response('gfjg')
+from city312_backend.settings import SECRET_KEY
 
 
 def decode_auth_token(token):
@@ -118,5 +101,3 @@ class LoginView(CreateAPIView):
                 "access": str(refresh.access_token),
             }
         )
-
-
