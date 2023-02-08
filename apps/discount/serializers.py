@@ -30,6 +30,18 @@ class DiscountSerializer(serializers.ModelSerializer):
 
         return discount
 
+    # def update(self, instance, validated_data):
+    #     images = validated_data.pop("uploaded_images")
+    #
+    #     for image in images:
+    #         if image['id']:
+    #             if DiscountImage.objects.filter(image=image).exists():
+    #                 obj = DiscountImage.objects.get(id=image['id'])
+    #                 obj.image = image['image']
+
+
+
+
 
 class DiscountUpdateSerializer(serializers.ModelSerializer):
     images = DiscountImageSerializer(many=True, read_only=True)
