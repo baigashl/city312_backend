@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['18.181.228.1', 'localhost', '127.0.0.1', '0.0.0.0', '192.168.112.3', '312backend.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '312backend.com', 'www.312backend.com']
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -37,6 +37,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "https://312-card-bishkek-kasymjaparov.vercel.app"
 ]
 CORS_ORIGIN_WHITELIST = (
     "http://localhost:3000",
