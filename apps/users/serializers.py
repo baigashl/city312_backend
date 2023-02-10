@@ -92,12 +92,10 @@ class PartnerProfileSerializer(serializers.ModelSerializer):
 
 
 class LoginUserSerializer(serializers.ModelSerializer):
-    captcha = ReCaptchaField()
 
     class Meta:
         model = User
         fields = [
             "email",
-            "password",
-            "captcha"
+            "password"
         ]
