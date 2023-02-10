@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '312backend.com', 'www.312backend.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '312backend.com', 'www.312backend.com', '18.179.212.32']
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -86,11 +86,24 @@ INSTALLED_APPS = [
     'apps.review',
 ]
 
+
+APPEND_SLASH=False
+
 AUTH_USER_MODEL = 'users.User'
 
 RECAPTCHA_PUBLIC_KEY = config('RECAPTCHA_PUBLIC_KEY')
 DRF_RECAPTCHA_SECRET_KEY = config('DRF_RECAPTCHA_SECRET_KEY')
 DRF_RECAPTCHA_VERIFY_ENDPOINT = '/recaptcha/verify/'
+
+# AWS_ACCESS_KEY_ID = <YOUR AWS ACCESS KEY>
+# AWS_SECRET_ACCESS_KEY = <YOUR AWS SECRET KEY>
+# AWS_STORAGE_BUCKET_NAME = <YOUR AWS S3 BUCKET NAME>
+# AWS_S3_SIGNATURE_VERSION = 's3v4'
+# AWS_S3_REGION_NAME = <YOUR AWS S3 BUCKET LOCATION>
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = None
+# AWS_S3_VERIFY = True
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
