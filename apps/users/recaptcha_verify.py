@@ -6,7 +6,7 @@ from city312_backend import settings
 
 def verify_recaptcha(request):
     if request.method == 'POST':
-        recaptcha_response = request.POST.get('recaptcha_response')
+        recaptcha_response = request.POST.get('captcha')
         secret_key = settings.DRF_RECAPTCHA_SECRET_KEY
         verify_url = f"https://www.google.com/recaptcha/api/siteverify?secret={secret_key}&response={recaptcha_response}"
 
