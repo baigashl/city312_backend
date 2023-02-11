@@ -99,7 +99,7 @@ class PartnerProfileSerializer(serializers.ModelSerializer):
     """Serializer for PartnerProfile model"""
 
     user = UserSerializer()
-    captcha = ReCaptchaField()
+    # captcha = ReCaptchaField()
 
     class Meta:
         model = PartnerProfile
