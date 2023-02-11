@@ -66,7 +66,7 @@ class ClientProfileSerializer(serializers.ModelSerializer):
 
     user = UserSerializer()
     image = Base64ImageField()
-    captcha = ReCaptchaField()
+    # captcha = ReCaptchaField()
 
     class Meta:
         model = ClientProfile
