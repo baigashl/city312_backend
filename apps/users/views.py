@@ -1,4 +1,6 @@
 import jwt
+from django.contrib.sites import requests
+from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
@@ -16,6 +18,7 @@ from apps.users.serializers import (
     PartnerProfileSerializer,
     LoginUserSerializer,
 )
+from city312_backend import settings
 from city312_backend.settings import SECRET_KEY
 
 
@@ -38,6 +41,22 @@ class ClientProfileView(ModelViewSet):
 
     serializer_class = ClientProfileSerializer
     queryset = ClientProfile.objects.all()
+
+    # def create(self, request, *args, **kwargs):
+    #     """Creating a new client profile"""
+    #
+    #     serializer = self.get_serializer(data=request.data)
+    #     if serializer.is_valid():
+    #         recaptcha_response = request.data.get('captcha')
+    #         response = requests.post(settings.DRF_RECAPTCHA_VERIFY_ENDPOINT,
+    #                                  data={'recaptcha_response': recaptcha_response})
+    #         if response.json().get('status') == 'success':
+    #             self.perform_create(serializer)
+    #             headers = self.get_success_headers(serializer.data)
+    #             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    #         else:
+    #             return Response({'error': 'reCAPTCHA verification failed'}, status=status.HTTP_400_BAD_REQUEST)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         """Updating client profile data and password"""
