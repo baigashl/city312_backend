@@ -49,7 +49,7 @@ class ClientProfileView(ModelViewSet):
         if serializer.is_valid():
             recaptcha_response = request.data.get('captcha')
             response = requests.post(settings.DRF_RECAPTCHA_VERIFY_ENDPOINT,
-                                     data={'captcha': recaptcha_response})
+                                     data={'recaptcha_response': recaptcha_response})
             if response.json().get('status') == 'success':
                 self.perform_create(serializer)
                 headers = self.get_success_headers(serializer.data)
