@@ -1,7 +1,10 @@
-from requests.compat import basestring
+
 from rest_framework import serializers
 from rest_framework_recaptcha.fields import ReCaptchaField
 import base64
+import six
+import uuid
+
 from django.core.files.base import ContentFile
 from apps.users.models import (
     User,
@@ -14,9 +17,7 @@ class Base64ImageField(serializers.ImageField):
 
     def to_internal_value(self, data):
         from django.core.files.base import ContentFile
-        import base64
-        import six
-        import uuid
+
 
         if isinstance(data, six.string_types):
             if 'data:' in data and ';base64,' in data:
