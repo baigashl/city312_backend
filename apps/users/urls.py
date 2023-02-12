@@ -14,7 +14,7 @@ from apps.users.views import (
 )
 
 router = DefaultRouter()
-router.register('user', UserProfileView)
+router.register('profile', UserProfileView)
 
 urlpatterns = [
     path('', include(router.urls)),
