@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_swagger',
     'rest_framework_recaptcha',
+    'drf_yasg',
 
     'apps.discount',
     'apps.cart',
@@ -217,3 +218,17 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = ['https://312backend.com', 'https://www.312backend.com']
+
+
+# Swagger settings
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'USE_SESSION_AUTH': False,
+}
