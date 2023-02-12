@@ -1,11 +1,9 @@
-
-from rest_framework import serializers
-from rest_framework_recaptcha.fields import ReCaptchaField
 import base64
 import six
 import uuid
-
 from django.core.files.base import ContentFile
+from rest_framework import serializers
+# from rest_framework_recaptcha.fields import ReCaptchaField
 from apps.users.models import (
     User,
     ClientProfile,
@@ -16,8 +14,6 @@ from apps.users.models import (
 class Base64ImageField(serializers.ImageField):
 
     def to_internal_value(self, data):
-        from django.core.files.base import ContentFile
-
 
         if isinstance(data, six.string_types):
             if 'data:' in data and ';base64,' in data:
@@ -58,6 +54,7 @@ class UserSerializer(serializers.ModelSerializer):
             'is_staff',
             'last_login',
             'is_superuser',
+            'user_type',
         ]
 
 
@@ -65,7 +62,7 @@ class ClientProfileSerializer(serializers.ModelSerializer):
     """Serializer for ClientProfile model"""
 
     user = UserSerializer()
-    image = Base64ImageField()
+    image = Base64ImageField(allow_null=True)
     # captcha = ReCaptchaField()
 
     class Meta:
@@ -77,7 +74,7 @@ class ClientProfileSerializer(serializers.ModelSerializer):
 
         user_data = validated_data.pop('user')
         password_data = list(user_data.values())[0]
-        user = User.objects.create(**user_data)
+        user = User.objects.create(user_type='Клиент', **user_data)
         user.set_password(password_data)
         user.save()
         client = ClientProfile.objects.create(user=user, **validated_data)
@@ -99,6 +96,8 @@ class PartnerProfileSerializer(serializers.ModelSerializer):
     """Serializer for PartnerProfile model"""
 
     user = UserSerializer()
+    logo = Base64ImageField(allow_null=True)
+    banner = Base64ImageField(allow_null=True)
     # captcha = ReCaptchaField()
 
     class Meta:
@@ -110,7 +109,7 @@ class PartnerProfileSerializer(serializers.ModelSerializer):
 
         user_data = validated_data.pop('user')
         password_data = list(user_data.values())[0]
-        user = User.objects.create(**user_data)
+        user = User.objects.create(user_type='Партнер', **user_data)
         user.set_password(password_data)
         user.save()
         client = PartnerProfile.objects.create(user=user, **validated_data)
@@ -136,3 +135,4 @@ class LoginUserSerializer(serializers.ModelSerializer):
             "email",
             "password"
         ]
+
