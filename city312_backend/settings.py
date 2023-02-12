@@ -95,15 +95,15 @@ AUTH_USER_MODEL = 'users.User'
 DRF_RECAPTCHA_SECRET_KEY = config('DRF_RECAPTCHA_SECRET_KEY')
 DRF_RECAPTCHA_VERIFY_ENDPOINT = '/recaptcha/verify/'
 
-# AWS_ACCESS_KEY_ID = <YOUR AWS ACCESS KEY>
-# AWS_SECRET_ACCESS_KEY = <YOUR AWS SECRET KEY>
-# AWS_STORAGE_BUCKET_NAME = <YOUR AWS S3 BUCKET NAME>
-# AWS_S3_SIGNATURE_VERSION = 's3v4'
-# AWS_S3_REGION_NAME = <YOUR AWS S3 BUCKET LOCATION>
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_DEFAULT_ACL = None
-# AWS_S3_VERIFY = True
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_SIGNATURE_VERSION = config('AWS_S3_SIGNATURE_VERSION')
+AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME')
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_VERIFY = True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -146,6 +146,7 @@ DATABASES = {
         'PORT': config('POSTGRES_PORT'),
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
