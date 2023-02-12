@@ -8,20 +8,36 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return obj.user == request.user
 
 
-class IsAdminPermission(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user.is_admin
-
-
-class IsPartnerPermission(permissions.BasePermission):
-    def has_permission(self, request, view):
-        return request.user.isPartner
-
-
-
-
 class AnonPermissionOnly(permissions.BasePermission):
     message = "You are already authenticated"
 
     def has_permission(self, request, view):
         return not request.user.is_authenticated
+
+
+class IsClient(permissions.BasePermission):
+    """
+    Allows access only to client
+    """
+
+    message = "Sorry but access only for clients"
+
+    def has_permission(self, request, view):
+        return bool(
+            request.user
+            and request.user.user_type == "Клиент"
+        )
+
+
+class IsPartner(permissions.BasePermission):
+    """
+    Allows access only to partner
+    """
+
+    message = "Sorry but access only for partners"
+
+    def has_permission(self, request, view):
+        return bool(
+            request.user
+            and request.user.user_type == "Партнер"
+        )
