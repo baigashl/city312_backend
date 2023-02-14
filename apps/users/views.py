@@ -90,12 +90,17 @@ class UserProfileView(GenericViewSet,
         """Filtering serializer by user_type"""
 
         user = self.request.user
-        if user.user_type == 'Клиент':
+        if user.is_anonymous:
+            return UserSerializer
+        elif user.user_type == 'Клиент':
             return ClientProfileSerializer
         elif user.user_type == 'Партнер':
             return PartnerProfileSerializer
+        elif user.is_superuser:
+            return UserSerializer
 
-    permission_classes = (IsClient | IsPartner,)
+
+    # permission_classes = (IsClient | IsPartner,)
     serializer_class = get_serializer_class
     queryset = User.objects.all()
 
@@ -103,12 +108,17 @@ class UserProfileView(GenericViewSet,
         """Filtering queryset by user_type"""
 
         user = self.request.user
-        if user.user_type == 'Клиент':
+        if user.is_anonymous:
+            return self.queryset.filter(id=-1)
+        elif user.user_type == 'Клиент':
             queryset = ClientProfile.objects.all()
             return queryset.filter(user=user)
         elif user.user_type == 'Партнер':
             queryset = PartnerProfile.objects.all()
             return queryset.filter(user=user)
+        elif user.is_superuser:
+            queryset = User.objects.all()
+            return queryset
 
     def update(self, request, *args, **kwargs):
         """Updating partner profile data and password"""
@@ -119,7 +129,7 @@ class UserProfileView(GenericViewSet,
         if serializer.is_valid():
             serializer.save()
             if instance.user:
-                instance.user.set_password(instance.user.password)
+                # instance.user.set_password(instance.user.password)
                 instance.user.save()
             return Response(serializer.data)
         return Response(serializer.errors)
