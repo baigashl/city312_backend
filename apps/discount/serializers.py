@@ -6,6 +6,7 @@ from django.core.files.base import ContentFile
 import base64
 import six
 import uuid
+from apps.users.serializers import PartnerProfileSerializer
 
 
 class Base64ImageField(serializers.ImageField):
@@ -42,6 +43,15 @@ class DiscountImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = DiscountImage
         fields = ('id', 'discount', 'image',)
+
+
+class DiscountListSerializer(serializers.ModelSerializer):
+    images = DiscountImageSerializer(many=True, required=False)
+    partner_id = PartnerProfileSerializer(required=False)
+
+    class Meta:
+        model = Discount
+        fields = '__all__'
 
 
 class DiscountSerializer(serializers.ModelSerializer):
@@ -108,18 +118,6 @@ class DiscountSerializer(serializers.ModelSerializer):
                 obj.delete()
 
         return discount
-
-    # def update(self, instance, validated_data):
-    #     images = validated_data.pop("uploaded_images")
-    #
-    #     for image in images:
-    #         if image['id']:
-    #             if DiscountImage.objects.filter(image=image).exists():
-    #                 obj = DiscountImage.objects.get(id=image['id'])
-    #                 obj.image = image['image']
-
-
-
 
 
 class DiscountUpdateSerializer(serializers.ModelSerializer):

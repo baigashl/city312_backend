@@ -38,7 +38,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "https://312-card-bishkek-kasymjaparov.vercel.app",
-    "https://312-card-bishkek.vercel.app"
+    "https://312-card-bishkek.vercel.app",
+    "https://312backend.com",
+    "https://www.312backend.com"
 ]
 
 CORS_ORIGIN_WHITELIST = (

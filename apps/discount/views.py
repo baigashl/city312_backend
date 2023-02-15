@@ -5,10 +5,12 @@ from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
+from rest_framework import serializers
 
 from .models import Discount, DiscountImage
-from .serializers import DiscountSerializer, DiscountUpdateSerializer, DiscountImageSerializer
+from .serializers import DiscountSerializer, DiscountListSerializer, DiscountImageSerializer
 from ..users.permissions import AnonPermissionOnly
+from apps.users.serializers import PartnerProfileSerializer
 
 
 # class CustomPagination(pagination.PageNumberPagination):
@@ -19,13 +21,27 @@ from ..users.permissions import AnonPermissionOnly
 
 ###################################################################
 class DiscountViewSet(viewsets.ModelViewSet):
+    def get_serializer_class(self):
+        """Filtering serializer by user_type"""
+
+        if self.request.method == 'GET':
+            return DiscountListSerializer
+        elif self.request.method == 'POST':
+            return DiscountSerializer
+
+    serializer_class = get_serializer_class
     queryset = Discount.objects.all()
-    serializer_class = DiscountSerializer
     permission_classes = [permissions.AllowAny]
     parser_class = [MultiPartParser, FormParser, JSONParser]
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['name', 'price', 'cashback']
     search_fields = ['name', 'partner_id__brand_name']
+
+
+
+
+
+
 ##################################################################################
 
 
