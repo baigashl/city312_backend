@@ -8,6 +8,7 @@ from .views import (
     # GetUserFavoriteAPIView,
     # FavoriteDetailAPIView,
     DiscountViewSet,
+    CommentView,
     # DiscountDetailAPIView,
     # DiscountUpdateAPIView,
     # DiscountDeleteAPIView,
@@ -16,6 +17,7 @@ from .views import (
 
 router = DefaultRouter()
 router.register(r'discounts', DiscountViewSet, basename='discounts')
+router.register('comment', CommentView)
 
 urlpatterns = [
     path('', include(router.urls)),

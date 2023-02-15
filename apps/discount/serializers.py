@@ -7,6 +7,7 @@ import base64
 import six
 import uuid
 from apps.users.serializers import PartnerProfileSerializer
+from apps.discount.models import Comment
 
 
 class Base64ImageField(serializers.ImageField):
@@ -164,3 +165,14 @@ class FavoriteSerializer(serializers.ModelSerializer):
     def get_url(self, obj):
         request = self.context.get('request')
         return reverse("detail", kwargs={'id': obj.id}, request=request)
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    """Comment Serializer"""
+    class Meta:
+        model = Comment
+        fields = '__all__'
+        read_only_fields = [
+            'creation_datetime',
+            'author',
+        ]

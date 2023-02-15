@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import models
+from django.conf import settings
 
 from apps.activity_type.models import Category
 from apps.users.models import (
@@ -48,3 +49,14 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f'{self.user}'
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content = models.TextField()
+    creation_datetime = models.DateTimeField(auto_now_add=True)
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE)
+    parent_comment = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f"Comment {self.pk} by {self.author}"
