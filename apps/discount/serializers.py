@@ -45,9 +45,17 @@ class DiscountImageSerializer(serializers.ModelSerializer):
         fields = ('id', 'discount', 'image',)
 
 
+class DiscountListSerializer(serializers.ModelSerializer):
+    images = DiscountImageSerializer(many=True, required=False)
+    partner_id = PartnerProfileSerializer(required=False)
+
+    class Meta:
+        model = Discount
+        fields = '__all__'
+
+
 class DiscountSerializer(serializers.ModelSerializer):
     images = DiscountImageSerializer(many=True, required=False)
-    partner_id = PartnerProfileSerializer()
     uploaded_images = serializers.ListField(
         child=Base64ImageField(),
         write_only=True,
@@ -110,18 +118,6 @@ class DiscountSerializer(serializers.ModelSerializer):
                 obj.delete()
 
         return discount
-
-    # def update(self, instance, validated_data):
-    #     images = validated_data.pop("uploaded_images")
-    #
-    #     for image in images:
-    #         if image['id']:
-    #             if DiscountImage.objects.filter(image=image).exists():
-    #                 obj = DiscountImage.objects.get(id=image['id'])
-    #                 obj.image = image['image']
-
-
-
 
 
 class DiscountUpdateSerializer(serializers.ModelSerializer):

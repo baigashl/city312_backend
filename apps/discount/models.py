@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 from apps.activity_type.models import Category
@@ -29,6 +31,7 @@ class Discount(models.Model):
     referral_link = models.CharField(max_length=255)
     start_of_action = models.CharField(max_length=255)
     end_of_action = models.CharField(max_length=255)
+    created_data = models.DateTimeField(default=datetime.datetime.now)
 
     def __str__(self):
         return f'{self.name}'
