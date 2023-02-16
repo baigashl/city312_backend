@@ -1,28 +1,39 @@
-from rest_framework import serializers
+from drf_extra_fields.relations import PresentablePrimaryKeyRelatedField
+from drf_writable_nested import WritableNestedModelSerializer
 
 from .models import Cart, CartDiscount
+from ..discount.models import Discount
+from ..discount.serializers import DiscountListSerializer
 
 
-class CartDiscountSerializer(serializers.ModelSerializer):
+class CartDiscountSerializer(WritableNestedModelSerializer):
+    discount_id = PresentablePrimaryKeyRelatedField(
+        queryset=Discount.objects.all(),
+        presentation_serializer=DiscountListSerializer,
+    )
+
     class Meta:
         model = CartDiscount
         fields = '__all__'
 
 
-class CartSerializer(serializers.ModelSerializer):
+class CartSerializer(WritableNestedModelSerializer):
+    # discounts = PresentablePrimaryKeyRelatedField(
+    #     queryset=CartDiscount.objects.all(),
+    #     presentation_serializer=CartDiscountSerializer,
+    #     # read_only=True
+    #     # presentation_serializer=CartDiscountSerializer
+    # )
+
+    # discounts = serializers.ReadOnlyField()
+
     class Meta:
         model = Cart
-        fields = '__all__'
-        read_only_fields = ["total_price"]
-
-# class PaymentSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Payment
-#         fields = '__all__'
-#
-#     def create(self, validated_data):
-#         payment = Payment.objects.create(**validated_data)
-#         cart = self.context['cart']
-#         email = self.context['email']
-#         payment.charge(cart, email)
-#         return payment
+        fields = ['id',
+                  'user',
+                  'email',
+                  'name',
+                  'discounts',
+                  'total_price',
+                  'is_ordered']
+        read_only_fields = ['total_price']
