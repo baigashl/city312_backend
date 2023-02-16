@@ -91,8 +91,7 @@ INSTALLED_APPS = [
     'apps.review',
 ]
 
-
-APPEND_SLASH=False
+APPEND_SLASH = False
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -150,7 +149,6 @@ DATABASES = {
         'PORT': config('POSTGRES_PORT'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -223,7 +221,6 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = ['https://312backend.com', 'https://www.312backend.com']
-
 
 # Swagger settings
 
