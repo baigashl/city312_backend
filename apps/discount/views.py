@@ -7,10 +7,11 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework import serializers
 
-from .models import Discount, DiscountImage
+from .models import Discount, DiscountImage, Comment
 from .serializers import DiscountSerializer, DiscountListSerializer, DiscountImageSerializer
 from ..users.permissions import AnonPermissionOnly
 from apps.users.serializers import PartnerProfileSerializer
+from apps.discount.serializers import CommentSerializer
 
 
 # class CustomPagination(pagination.PageNumberPagination):
@@ -38,14 +39,13 @@ class DiscountViewSet(viewsets.ModelViewSet):
     search_fields = ['name', 'partner_id__brand_name']
 
 
+class CommentView(viewsets.ModelViewSet):
+    """Comment View"""
 
-
-
+    serializer_class = CommentSerializer
+    queryset = Comment.objects.all()
 
 ##################################################################################
-
-
-
 
 
 # ############################################################################## FAVORITE
